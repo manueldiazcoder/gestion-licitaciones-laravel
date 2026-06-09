@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -41,4 +42,47 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    // ─────────────────────────────────────────
+    //  Métodos de Roles
+    // ─────────────────────────────────────────
+
+    /**
+     * ¿Este usuario es administrador?
+     */
+    public function esAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * ¿Este usuario es visor (lectura)?
+     */
+    public function esVisor(): bool
+    {
+        return $this->role === 'visor';
+    }
+
+    /**
+     * Retorna la etiqueta HTML del rol (para badges).
+     */
+    public function getRolBadge(): string
+    {
+        $label = $this->getRolFormateado();
+        $class = $this->esAdmin() ? 'bg-danger' : 'bg-secondary';
+
+        return "<span class=\"badge {$class}\">{$label}</span>";
+    }
+
+    /**
+     * Retorna el nombre del rol en castellano.
+     */
+    public function getRolFormateado(): string
+    {
+        return match ($this->role) {
+            'admin' => 'Administrador',
+            'visor' => 'Visor',
+            default => ucfirst($this->role),
+        };
+    }
 }

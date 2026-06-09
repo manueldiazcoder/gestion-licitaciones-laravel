@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -12,11 +13,28 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        // Usuario administrador por defecto
+        User::firstOrCreate(
+            ['email' => 'admin@admin.com'],
+            [
+                'name'     => 'admin',
+                'password' => Hash::make('admin'),
+                'role'     => 'admin',
+            ]
+        );
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        // Usuario visor de prueba
+        User::firstOrCreate(
+            ['email' => 'visor@visor.com'],
+            [
+                'name'     => 'visor',
+                'password' => Hash::make('visor'),
+                'role'     => 'visor',
+            ]
+        );
+
+        $this->command->info('Usuarios por defecto creados:');
+        $this->command->info('  admin / admin@admin.com / admin');
+        $this->command->info('  visor / visor@visor.com / visor');
     }
 }
