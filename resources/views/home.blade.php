@@ -35,7 +35,7 @@
 
           @if (Auth::user()->esAdmin())
             <div class="col-md-4">
-              <a href="{{ route('procesos.crear') }}" class="text-decoration-none">
+              <a href="{{ route('procesos.create') }}" class="text-decoration-none">
                 <div class="card bg-dark border-success h-100 shadow-sm">
                   <div class="card-body text-center py-4">
                     <i class="bi bi-plus-circle display-4 text-success mb-3 d-block"></i>

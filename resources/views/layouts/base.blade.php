@@ -39,7 +39,7 @@
             </li>
             @if (Auth::user()->esAdmin())
               <li class="nav-item">
-                <a class="nav-link" href="{{ route('procesos.crear') }}">
+                <a class="nav-link" href="{{ route('procesos.create') }}">
                   <i class="bi bi-plus-circle me-1"></i>Crear
                 </a>
               </li>

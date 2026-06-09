@@ -3,93 +3,109 @@
 namespace App\Http\Controllers;
 
 use App\Models\Proceso;
-use Illuminate\Http\RedirectResponse;
+use App\Http\Requests\StoreProcesoRequest;
+use App\Http\Requests\UpdateProcesoRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ProcesoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function __construct()
     {
-        // SELECT * FROM prueba_laravel.procesos;
-        // $procesos = DB::table('prueba_laravel.procesos')->get();
-        $procesos = Proceso::all();
-        return view('consultarProceso', ['procesos' => $procesos]);
+        // Visor solo puede ver (index + show).
+        $this->middleware('role:admin')->except(['index', 'show']);
     }
 
-    // POSIBLE SOLUCIÓN A LO QUE SE DEBA MOSTRAR EN EL HEADER
-    // public function index(Tabs $tabs): view
-    // {
-    //     return view('home', ['Información Básica', 'Cronograma']);
-    // }
     /**
-     * Show the form for creating a new resource.
+     * Listado de procesos con búsqueda y paginación.
+     */
+    public function index(Request $request)
+    {
+        $procesos = Proceso::query()
+            ->search($request->query('search'))
+            ->byMoneda($request->query('moneda'))
+            ->byDateRange($request->query('desde'), $request->query('hasta'))
+            ->orderBy('created_at', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('procesos.index', compact('procesos'));
+    }
+
+    /**
+     * Formulario de creación.
      */
     public function create()
     {
-        return view('create');
+        return view('procesos.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Guardar un proceso nuevo.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreProcesoRequest $request)
     {
-        $request->validate([
-            'objeto' => 'required',
-            'descripcion' => 'required',
-            'fecha_inicio' => 'required',
-            'hora_inicio' => 'required',
-            'fecha_cierre' => 'required',
-            'hora_cierre' => 'required',
-            'presupuesto' => 'required',
-            'moneda' => 'required'
-        ]);
-        // ES EL FORMATO DE LA FECHA EN LA BD
-        // dd($request->all());
-        // use prueba_laravel;
+        $proceso = Proceso::create($request->validated());
 
-        // // INSERT INTO `procesos` (`objeto`,`actividad`,`descripcion`,`moneda`,`presupuesto`,`fecha_inicio`,`hora_inicio`,`fecha_cierre`,`hora_cierre`,`updated_at`,`created_at`) VALUES (
-        // //     'f','f','f','COP',1,'2023-05-10','22:29:00','2023-05-05','22:28:00','2023-05-08 15:31:01','2023-05-08 15:31:01');
-        // DB::statement('use prueba_laravel;');
-        Proceso::create($request->all());
-        // CON EL PRIMER BOTÓN DE GUARDAR CAMBIAR LA CLASE DE ACTIVE
-        // A LA PESTAÑA CRONOGRAMA Y CON EL ULTIMO BOTÓN ENVIAR EL FORMULARIO
-        return redirect()->route('procesos.index');
+        Log::info('Proceso creado', [
+            'codigo' => $proceso->codigo_proceso,
+            'objeto' => $proceso->objeto,
+            'user'   => auth()->user()->email,
+        ]);
+
+        return redirect()
+            ->route('procesos.show', $proceso)
+            ->with('success', '✅ Proceso creado correctamente.');
     }
 
     /**
-     * Display the specified resource.
+     * Ver detalle de un proceso.
      */
     public function show(Proceso $proceso)
     {
-        //
+        return view('procesos.show', compact('proceso'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Formulario de edición.
      */
     public function edit(Proceso $proceso)
     {
-        //
+        return view('procesos.edit', compact('proceso'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Actualizar un proceso existente.
      */
-    public function update(Request $request, Proceso $proceso)
+    public function update(UpdateProcesoRequest $request, Proceso $proceso)
     {
-        //
+        $proceso->update($request->validated());
+
+        Log::info('Proceso actualizado', [
+            'codigo' => $proceso->codigo_proceso,
+            'user'   => auth()->user()->email,
+        ]);
+
+        return redirect()
+            ->route('procesos.show', $proceso)
+            ->with('success', '✅ Proceso actualizado correctamente.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Eliminar un proceso.
      */
     public function destroy(Proceso $proceso)
     {
-        //
+        $proceso->delete();
+
+        Log::info('Proceso eliminado', [
+            'codigo' => $proceso->codigo_proceso,
+            'objeto' => $proceso->objeto,
+            'user'   => auth()->user()->email,
+        ]);
+
+        return redirect()
+            ->route('procesos.index')
+            ->with('success', '✅ Proceso eliminado correctamente.');
     }
 }

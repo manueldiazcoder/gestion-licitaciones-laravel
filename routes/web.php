@@ -43,17 +43,6 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+    // CRUD de Procesos — el middleware de roles está en el constructor del controller
     Route::resource('procesos', ProcesoController::class);
-    Route::get('/crearProceso', function () {
-        return view('create');
-    })->name('procesos.crear');
-});
-
-// ─────────────────────────────────────────
-//  Rutas solo para administradores
-// ─────────────────────────────────────────
-
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    // Ejemplo: gestión de usuarios (se ampliará después)
-    // Route::resource('users', UserController::class);
 });
