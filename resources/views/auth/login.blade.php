@@ -81,6 +81,21 @@
 
                 <hr class="my-4">
 
+                {{-- OAuth --}}
+                <div class="text-center mb-3">
+                    <p class="text-muted small mb-2">O iniciá sesión con</p>
+                    <div class="d-flex justify-content-center gap-2">
+                        <a href="{{ route('oauth.redirect', 'google') }}" class="btn btn-outline-danger btn-sm">
+                            <i class="bi bi-google me-1"></i>Google
+                        </a>
+                        <a href="{{ route('oauth.redirect', 'github') }}" class="btn btn-outline-dark btn-sm">
+                            <i class="bi bi-github me-1"></i>GitHub
+                        </a>
+                    </div>
+                </div>
+
+                <hr>
+
                 <div class="text-center">
                     <p class="mb-1">
                         ¿No tenés cuenta?

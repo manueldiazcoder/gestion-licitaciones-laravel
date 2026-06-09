@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\OAuthController;
 use App\Http\Controllers\ProcesoController;
 
 /*
@@ -29,6 +30,10 @@ Route::middleware('guest')->group(function () {
 
     Route::get('/register',  [AuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
+
+    // ── OAuth ──────────────────────────────────────
+    Route::get('/auth/{provider}/redirect', [OAuthController::class, 'redirect'])->name('oauth.redirect');
+    Route::get('/auth/{provider}/callback', [OAuthController::class, 'callback'])->name('oauth.callback');
 });
 
 // ─────────────────────────────────────────
