@@ -1,8 +1,8 @@
 {
-    "name": "laravel/laravel",
+    "name": "manueldiazcoder/gestion-licitaciones-laravel",
     "type": "project",
-    "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "description": "Sistema de Gestión de Licitaciones - Laravel 10 + Sail + OAuth 2.0 + Roles",
+    "keywords": ["licitaciones", "procurement", "laravel", "oauth2", "docker", "sail"],
     "license": "MIT",
     "require": {
         "php": "^8.1",
