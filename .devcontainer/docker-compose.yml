@@ -1,0 +1,48 @@
+services:
+  web:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    ports:
+      - "8080:80"
+    volumes:
+      - ..:/var/www/html
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=prueba_laravel
+      - DB_USERNAME=sail
+      - DB_PASSWORD=password
+    networks:
+      - devnet
+
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: prueba_laravel
+      MYSQL_USER: sail
+      MYSQL_PASSWORD: password
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./mysql.cnf:/etc/mysql/conf.d/utf8.cnf
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+      start_period: 30s
+    networks:
+      - devnet
+
+volumes:
+  mysql_data:
+
+networks:
+  devnet:

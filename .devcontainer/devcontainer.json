@@ -1,0 +1,39 @@
+{
+  "name": "Sistema de Gestión de Licitaciones - Laravel",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "web",
+  "workspaceFolder": "/var/www/html",
+  "forwardPorts": [8080, 3307],
+  "portsAttributes": {
+    "8080": {
+      "label": "Aplicación Web",
+      "onAutoForward": "notify"
+    },
+    "3307": {
+      "label": "MySQL",
+      "onAutoForward": "silent"
+    }
+  },
+  "postCreateCommand": "composer install --no-interaction --no-progress --prefer-dist --ignore-platform-reqs 2>/dev/null; npm install 2>/dev/null; php artisan key:generate 2>/dev/null; php artisan storage:link 2>/dev/null; php artisan migrate --seed --force 2>/dev/null; echo '✅ Entorno listo! Abrí http://localhost:8080 en tu navegador'",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bmewburn.vscode-intelephense-client",
+        "EditorConfig.EditorConfig",
+        "ms-azuretools.vscode-docker",
+        "esbenp.prettier-vscode",
+        "oderwat.indent-rainbow",
+        "laravel.vscode-laravel",
+        "onecentlin.laravel-blade",
+        "bradlc.vscode-tailwindcss"
+      ],
+      "settings": {
+        "intelephense.files.maxSize": 5000000,
+        "php.validate.enable": true,
+        "files.associations": {
+          "*.php": "php"
+        }
+      }
+    }
+  }
+}
