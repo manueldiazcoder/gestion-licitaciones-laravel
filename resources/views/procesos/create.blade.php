@@ -83,6 +83,34 @@
 
             <hr class="delimitadorSuperior">
 
+            {{-- Estado y Responsable --}}
+            <h5 class="mb-3 mt-3 fw-bold" style="color: var(--color-primary);">
+                <i class="bi bi-info-circle me-2"></i>Estado y Responsable
+            </h5>
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <label for="estado" class="form-label form-label-sm">Estado</label>
+                    <select name="estado" id="estado" class="form-select">
+                        @foreach (\App\Models\Proceso::ESTADOS as $est)
+                            <option value="{{ $est }}" @selected(old('estado', 'Borrador') === $est)>{{ $est }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="responsable_id" class="form-label form-label-sm">Responsable</label>
+                    <select name="responsable_id" id="responsable_id" class="form-select">
+                        <option value="">-- Seleccione --</option>
+                        @foreach ($responsables as $r)
+                            <option value="{{ $r->id }}" @selected(old('responsable_id') == $r->id)>
+                                {{ $r->nombre_completo }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <hr class="delimitadorSuperior">
+
             {{-- Cronograma --}}
             <h5 class="mb-3 mt-3 fw-bold" style="color: var(--color-primary);">
                 <i class="bi bi-calendar-event me-2"></i>Cronograma

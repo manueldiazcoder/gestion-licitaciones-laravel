@@ -41,7 +41,7 @@ class ProcesoController extends Controller
         $data['creador_id'] = auth()->id();
 
         if (empty($data['estado'])) {
-            $data['estado'] = 'borrador';
+            $data['estado'] = 'Borrador';
         }
 
         $proceso = Proceso::create($data);

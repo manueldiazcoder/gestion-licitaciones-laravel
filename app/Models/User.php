@@ -75,13 +75,7 @@ class User extends Authenticatable implements CanResetPasswordContract
     public function getRolBadge(): string
     {
         $label = $this->getRolFormateado();
-        $class = match ($this->role) {
-            'admin'    => 'bg-danger',
-            'operador' => 'bg-primary',
-            'visor'    => 'bg-secondary',
-            'usuario'  => 'bg-info',
-            default    => 'bg-secondary',
-        };
+        $class = $this->esAdmin() ? 'bg-danger' : 'bg-info text-dark';
 
         return "<span class=\"badge {$class}\">{$label}</span>";
     }
@@ -92,11 +86,9 @@ class User extends Authenticatable implements CanResetPasswordContract
     public function getRolFormateado(): string
     {
         return match ($this->role) {
-            'admin'    => 'Administrador',
-            'operador' => 'Operador',
-            'visor'    => 'Visor',
-            'usuario'  => 'Usuario',
-            default    => ucfirst($this->role),
+            'admin' => 'Administrador',
+            'visor' => 'Visor',
+            default => ucfirst($this->role),
         };
     }
 

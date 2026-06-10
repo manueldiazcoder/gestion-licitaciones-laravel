@@ -24,7 +24,7 @@ class StoreProcesoRequest extends FormRequest
             'hora_inicio'  => ['required', 'date_format:H:i'],
             'fecha_cierre'   => ['required', 'date', 'after_or_equal:fecha_inicio'],
             'hora_cierre'    => ['required', 'date_format:H:i'],
-            'estado'         => ['nullable', 'string', 'in:borrador,activo,evaluacion,adjudicado,cancelado'],
+            'estado'         => ['nullable', 'string', 'in:Borrador,Publicado,En evaluación,Adjudicado,Cancelado'],
             'responsable_id' => ['nullable', 'integer', 'exists:responsables,id'],
         ];
     }

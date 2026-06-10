@@ -26,9 +26,9 @@ use App\Http\Controllers\ResetPasswordController;
 Route::get('/', function () {
     $data = [
         'totalProcesos' => \App\Models\Proceso::count(),
-        'activos'       => \App\Models\Proceso::where('estado', 'activo')->count(),
-        'enEvaluacion'  => \App\Models\Proceso::where('estado', 'evaluacion')->count(),
-        'adjudicados'   => \App\Models\Proceso::where('estado', 'adjudicado')->count(),
+        'publicados'    => \App\Models\Proceso::where('estado', 'Publicado')->count(),
+        'enEvaluacion'  => \App\Models\Proceso::where('estado', 'En evaluación')->count(),
+        'adjudicados'   => \App\Models\Proceso::where('estado', 'Adjudicado')->count(),
     ];
     return view('home', $data);
 })->name('home');

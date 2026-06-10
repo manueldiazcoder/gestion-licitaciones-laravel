@@ -10,11 +10,12 @@ class Responsable extends Model
 {
     use HasFactory;
 
+    protected $table = 'responsables';
+
     protected $fillable = [
-        'nombre',
-        'cargo',
-        'email',
-        'telefono',
+        'nombre_completo',
+        'numero_telefono',
+        'correo_electronico',
     ];
 
     public function procesos(): HasMany

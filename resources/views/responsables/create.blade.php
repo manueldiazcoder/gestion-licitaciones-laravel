@@ -31,28 +31,22 @@
 
             <div class="row g-3">
                 <div class="col-md-6">
-                    <label for="nombre" class="form-label">Nombre <span class="text-danger">*</span></label>
-                    <input type="text" name="nombre" id="nombre"
-                           class="form-control @error('nombre') is-invalid @enderror"
-                           value="{{ old('nombre') }}" required maxlength="255">
+                    <label for="nombre_completo" class="form-label">Nombre completo <span class="text-danger">*</span></label>
+                    <input type="text" name="nombre_completo" id="nombre_completo"
+                           class="form-control @error('nombre_completo') is-invalid @enderror"
+                           value="{{ old('nombre_completo') }}" required maxlength="255">
                 </div>
                 <div class="col-md-6">
-                    <label for="cargo" class="form-label">Cargo</label>
-                    <input type="text" name="cargo" id="cargo"
-                           class="form-control @error('cargo') is-invalid @enderror"
-                           value="{{ old('cargo') }}" maxlength="255">
+                    <label for="numero_telefono" class="form-label">Número de teléfono <span class="text-danger">*</span></label>
+                    <input type="text" name="numero_telefono" id="numero_telefono"
+                           class="form-control @error('numero_telefono') is-invalid @enderror"
+                           value="{{ old('numero_telefono') }}" required maxlength="30">
                 </div>
                 <div class="col-md-6">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" name="email" id="email"
-                           class="form-control @error('email') is-invalid @enderror"
-                           value="{{ old('email') }}" maxlength="255">
-                </div>
-                <div class="col-md-6">
-                    <label for="telefono" class="form-label">Teléfono</label>
-                    <input type="text" name="telefono" id="telefono"
-                           class="form-control @error('telefono') is-invalid @enderror"
-                           value="{{ old('telefono') }}" maxlength="50">
+                    <label for="correo_electronico" class="form-label">Correo electrónico <span class="text-danger">*</span></label>
+                    <input type="email" name="correo_electronico" id="correo_electronico"
+                           class="form-control @error('correo_electronico') is-invalid @enderror"
+                           value="{{ old('correo_electronico') }}" required maxlength="255">
                 </div>
             </div>
 

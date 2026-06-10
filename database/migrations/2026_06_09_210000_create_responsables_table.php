@@ -10,10 +10,9 @@ return new class extends Migration
     {
         Schema::create('responsables', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre', 255);
-            $table->string('cargo', 255)->nullable();
-            $table->string('email', 255)->nullable();
-            $table->string('telefono', 50)->nullable();
+            $table->string('nombre_completo', 255);
+            $table->string('numero_telefono', 30);
+            $table->string('correo_electronico', 255);
             $table->timestamps();
         });
     }

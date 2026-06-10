@@ -46,9 +46,8 @@
                 <div class="col-md-6">
                     <label for="role" class="form-label">Rol <span class="text-danger">*</span></label>
                     <select name="role" id="role" class="form-select @error('role') is-invalid @enderror" required>
-                        <option value="admin" @selected(old('role', $user->role) === 'admin')>Admin</option>
-                        <option value="operador" @selected(old('role', $user->role) === 'operador')>Operador</option>
-                        <option value="usuario" @selected(old('role', $user->role) === 'usuario')>Usuario</option>
+                        <option value="admin" @selected(old('role', $user->role) === 'admin')>Administrador</option>
+                        <option value="visor" @selected(old('role', $user->role) === 'visor')>Visor (solo consulta)</option>
                     </select>
                 </div>
             </div>

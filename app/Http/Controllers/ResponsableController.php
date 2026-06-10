@@ -17,7 +17,7 @@ class ResponsableController extends Controller
     public function index(): View
     {
         $responsables = Responsable::withCount('procesos')
-            ->orderBy('nombre')
+            ->orderBy('nombre_completo')
             ->paginate(20);
 
         return view('responsables.index', compact('responsables'));
@@ -31,10 +31,9 @@ class ResponsableController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'nombre'   => 'required|string|max:255',
-            'cargo'    => 'nullable|string|max:255',
-            'email'    => 'nullable|email|max:255',
-            'telefono' => 'nullable|string|max:50',
+            'nombre_completo'    => 'required|string|max:255',
+            'numero_telefono'    => 'required|string|max:30',
+            'correo_electronico' => 'required|email|max:255',
         ]);
 
         Responsable::create($validated);
@@ -51,10 +50,9 @@ class ResponsableController extends Controller
     public function update(Request $request, Responsable $responsable): RedirectResponse
     {
         $validated = $request->validate([
-            'nombre'   => 'required|string|max:255',
-            'cargo'    => 'nullable|string|max:255',
-            'email'    => 'nullable|email|max:255',
-            'telefono' => 'nullable|string|max:50',
+            'nombre_completo'    => 'required|string|max:255',
+            'numero_telefono'    => 'required|string|max:30',
+            'correo_electronico' => 'required|email|max:255',
         ]);
 
         $responsable->update($validated);

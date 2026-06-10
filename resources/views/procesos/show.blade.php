@@ -48,13 +48,10 @@
             <div class="col-md-4">
                 <label class="text-muted small text-uppercase fw-semibold">Estado</label>
                 <p class="mb-0">
-                    @if ($proceso->estado)
-                        <span class="badge bg-{{ $proceso->estado === 'activo' ? 'success' : ($proceso->estado === 'evaluacion' ? 'warning' : ($proceso->estado === 'adjudicado' ? 'info' : 'secondary')) }}">
-                            {{ ucfirst($proceso->estado) }}
-                        </span>
-                    @else
-                        <span class="badge bg-secondary">Borrador</span>
-                    @endif
+                    @php
+                        $color = \App\Models\Proceso::COLORES_ESTADO[$proceso->estado] ?? 'bg-secondary';
+                    @endphp
+                    <span class="badge {{ $color }}">{{ $proceso->estado ?? 'Borrador' }}</span>
                 </p>
             </div>
 

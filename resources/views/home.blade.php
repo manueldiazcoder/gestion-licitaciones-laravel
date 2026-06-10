@@ -22,8 +22,8 @@
       <p class="metric-value">{{ $totalProcesos ?? 0 }}</p>
     </div>
     <div class="metric-card" style="background: linear-gradient(135deg, #276749, #38a169);">
-      <h6>Activos</h6>
-      <p class="metric-value">{{ $activos ?? 0 }}</p>
+      <h6>Publicados</h6>
+      <p class="metric-value">{{ $publicados ?? 0 }}</p>
     </div>
     <div class="metric-card" style="background: linear-gradient(135deg, #744210, #d69e2e);">
       <h6>En Evaluación</h6>

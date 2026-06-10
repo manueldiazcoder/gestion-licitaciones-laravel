@@ -18,10 +18,9 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Nombre</th>
-                    <th>Cargo</th>
-                    <th>Email</th>
+                    <th>Nombre completo</th>
                     <th>Teléfono</th>
+                    <th>Correo electrónico</th>
                     <th class="text-center">Procesos</th>
                     <th class="text-center">Acciones</th>
                 </tr>
@@ -30,16 +29,15 @@
                 @forelse ($responsables as $r)
                     <tr>
                         <td class="text-center fw-bold">{{ $r->id }}</td>
-                        <td class="fw-semibold">{{ $r->nombre }}</td>
-                        <td>{{ $r->cargo ?? '—' }}</td>
+                        <td class="fw-semibold">{{ $r->nombre_completo }}</td>
+                        <td>{{ $r->numero_telefono }}</td>
                         <td>
-                            @if ($r->email)
-                                <a href="mailto:{{ $r->email }}" class="text-decoration-none">{{ $r->email }}</a>
+                            @if ($r->correo_electronico)
+                                <a href="mailto:{{ $r->correo_electronico }}" class="text-decoration-none">{{ $r->correo_electronico }}</a>
                             @else
                                 <span class="text-muted">—</span>
                             @endif
                         </td>
-                        <td>{{ $r->telefono ?? '—' }}</td>
                         <td class="text-center">
                             <span class="badge bg-secondary">{{ $r->procesos_count }}</span>
                         </td>
@@ -62,7 +60,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="text-center text-muted py-4">
+                        <td colspan="6" class="text-center text-muted py-4">
                             <i class="bi bi-inbox me-2"></i>No hay responsables registrados.
                         </td>
                     </tr>

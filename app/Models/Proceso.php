@@ -27,6 +27,16 @@ class Proceso extends Model
         'creador_id',
     ];
 
+    public const ESTADOS = ['Borrador', 'Publicado', 'En evaluación', 'Adjudicado', 'Cancelado'];
+
+    public const COLORES_ESTADO = [
+        'Borrador'      => 'bg-secondary',
+        'Publicado'     => 'bg-primary',
+        'En evaluación' => 'bg-warning text-dark',
+        'Adjudicado'    => 'bg-success',
+        'Cancelado'     => 'bg-danger',
+    ];
+
     protected $casts = [
         'fecha_inicio' => 'date:Y-m-d',
         'fecha_cierre' => 'date:Y-m-d',
