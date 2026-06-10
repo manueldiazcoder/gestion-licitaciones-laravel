@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OAuthController;
 use App\Http\Controllers\ProcesoController;
+use App\Http\Controllers\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,4 +46,10 @@ Route::middleware('auth')->group(function () {
 
     // CRUD de Procesos — el middleware de roles está en el constructor del controller
     Route::resource('procesos', ProcesoController::class);
+
+    // Reportes
+    Route::prefix('reportes')->name('reportes.')->group(function () {
+        Route::get('/',             [ReportController::class, 'index'])->name('index');
+        Route::get('/exportar-csv', [ReportController::class, 'exportCsv'])->name('export');
+    });
 });

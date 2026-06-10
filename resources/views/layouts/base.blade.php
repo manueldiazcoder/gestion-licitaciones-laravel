@@ -37,20 +37,16 @@
                 <i class="bi bi-search me-1"></i>Consultar
               </a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ route('reportes.index') }}">
+                <i class="bi bi-bar-chart-fill me-1"></i>Reportes
+              </a>
+            </li>
             @if (Auth::user()->esAdmin())
               <li class="nav-item">
                 <a class="nav-link" href="{{ route('procesos.create') }}">
                   <i class="bi bi-plus-circle me-1"></i>Crear
                 </a>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                  <i class="bi bi-gear me-1"></i>Admin
-                </a>
-                <ul class="dropdown-menu dropdown-menu-dark">
-                  <li><a class="dropdown-item" href="#">Usuarios</a></li>
-                  <li><a class="dropdown-item" href="#">Reportes</a></li>
-                </ul>
               </li>
             @endif
           @endauth
