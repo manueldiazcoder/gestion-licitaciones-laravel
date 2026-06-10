@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Proceso extends Model
 {
@@ -21,6 +22,9 @@ class Proceso extends Model
         'hora_inicio',
         'fecha_cierre',
         'hora_cierre',
+        'estado',
+        'responsable_id',
+        'creador_id',
     ];
 
     protected $casts = [
@@ -34,12 +38,23 @@ class Proceso extends Model
     ];
 
     // ─────────────────────────────────────────
+    //  Relaciones
+    // ─────────────────────────────────────────
+
+    public function responsable(): BelongsTo
+    {
+        return $this->belongsTo(Responsable::class, 'responsable_id');
+    }
+
+    public function creador(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'creador_id');
+    }
+
+    // ─────────────────────────────────────────
     //  Accesores
     // ─────────────────────────────────────────
 
-    /**
-     * Presupuesto formateado con símbolo de moneda.
-     */
     public function getPresupuestoFormateadoAttribute(): string
     {
         $simbolos = [
@@ -54,9 +69,6 @@ class Proceso extends Model
         return "{$simbolo}{$monto}";
     }
 
-    /**
-     * Retorna el rango de fechas como texto legible.
-     */
     public function getRangoFechasAttribute(): string
     {
         return "{$this->fecha_inicio->format('d/m/Y')} {$this->hora_inicio} → {$this->fecha_cierre->format('d/m/Y')} {$this->hora_cierre}";
@@ -66,9 +78,6 @@ class Proceso extends Model
     //  Scopes
     // ─────────────────────────────────────────
 
-    /**
-     * Filtrar por término de búsqueda (objeto, descripción o actividad).
-     */
     public function scopeSearch($query, ?string $term)
     {
         if ($term) {
@@ -80,9 +89,6 @@ class Proceso extends Model
         }
     }
 
-    /**
-     * Filtrar por moneda.
-     */
     public function scopeByMoneda($query, ?string $moneda)
     {
         if ($moneda) {
@@ -90,9 +96,6 @@ class Proceso extends Model
         }
     }
 
-    /**
-     * Filtrar por rango de fechas.
-     */
     public function scopeByDateRange($query, ?string $desde, ?string $hasta)
     {
         if ($desde) {
@@ -100,6 +103,13 @@ class Proceso extends Model
         }
         if ($hasta) {
             $query->whereDate('fecha_cierre', '<=', $hasta);
+        }
+    }
+
+    public function scopeByEstado($query, ?string $estado)
+    {
+        if ($estado) {
+            $query->where('estado', $estado);
         }
     }
 }

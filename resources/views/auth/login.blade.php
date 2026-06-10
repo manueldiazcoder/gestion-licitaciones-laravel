@@ -1,5 +1,7 @@
 @extends('layouts.base')
 
+@section('title', 'Iniciar sesión')
+
 @section('content')
 <div class="row justify-content-center mt-5">
     <div class="col-md-5">

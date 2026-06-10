@@ -24,7 +24,13 @@ use App\Http\Controllers\ResetPasswordController;
 // ─────────────────────────────────────────
 
 Route::get('/', function () {
-    return view('home');
+    $data = [
+        'totalProcesos' => \App\Models\Proceso::count(),
+        'activos'       => \App\Models\Proceso::where('estado', 'activo')->count(),
+        'enEvaluacion'  => \App\Models\Proceso::where('estado', 'evaluacion')->count(),
+        'adjudicados'   => \App\Models\Proceso::where('estado', 'adjudicado')->count(),
+    ];
+    return view('home', $data);
 })->name('home');
 
 Route::middleware('guest')->group(function () {
@@ -59,5 +65,17 @@ Route::middleware('auth')->group(function () {
     Route::prefix('reportes')->name('reportes.')->group(function () {
         Route::get('/',             [ReportController::class, 'index'])->name('index');
         Route::get('/exportar-csv', [ReportController::class, 'exportCsv'])->name('export');
+    });
+
+    // Responsables (solo admin)
+    Route::resource('responsables', \App\Http\Controllers\ResponsableController::class)
+        ->middleware('role:admin');
+
+    // Admin: gestión de usuarios
+    Route::prefix('usuarios')->name('usuarios.')->middleware('role:admin')->group(function () {
+        Route::get('/',                         [\App\Http\Controllers\AdminUserController::class, 'index'])->name('index');
+        Route::get('/{user}/edit',              [\App\Http\Controllers\AdminUserController::class, 'edit'])->name('edit');
+        Route::put('/{user}',                   [\App\Http\Controllers\AdminUserController::class, 'update'])->name('update');
+        Route::delete('/{user}',                [\App\Http\Controllers\AdminUserController::class, 'destroy'])->name('destroy');
     });
 });

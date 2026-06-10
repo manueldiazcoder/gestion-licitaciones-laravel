@@ -1,72 +1,95 @@
 @extends('layouts.base')
 
-@section('title', 'Inicio')
+@section('title', 'Dashboard')
 
 @section('content')
 
-<main>
-  <div class="row justify-content-center">
-    <div class="col-md-8 text-center">
+@auth
+  {{-- Bienvenida --}}
+  <div class="mb-4 text-center">
+    <h2 class="fw-bold">
+      <i class="bi bi-person-circle me-2"></i>Bienvenido, {{ Auth::user()->name }}
+    </h2>
+    <p class="lead text-muted">
+      Rol: {!! Auth::user()->getRolBadge() !!}
+    </p>
+  </div>
 
-      @auth
-        <div class="mb-4">
-          <h2 class="fw-bold">
-            <i class="bi bi-person-circle me-2"></i>Bienvenido, {{ Auth::user()->name }}
-          </h2>
-          <p class="lead text-muted">
-            Rol: {!! Auth::user()->getRolBadge() !!}
-          </p>
-        </div>
-
-        <hr class="border-secondary mb-4">
-
-        <div class="row g-3 justify-content-center">
-          <div class="col-md-4">
-            <a href="{{ route('procesos.index') }}" class="text-decoration-none">
-              <div class="card bg-dark border-primary h-100 shadow-sm">
-                <div class="card-body text-center py-4">
-                  <i class="bi bi-search display-4 text-primary mb-3 d-block"></i>
-                  <h5 class="card-title text-white">Consultar</h5>
-                  <p class="card-text text-muted small">Buscá y revisá procesos existentes</p>
-                </div>
-              </div>
-            </a>
-          </div>
-
-          @if (Auth::user()->esAdmin())
-            <div class="col-md-4">
-              <a href="{{ route('procesos.create') }}" class="text-decoration-none">
-                <div class="card bg-dark border-success h-100 shadow-sm">
-                  <div class="card-body text-center py-4">
-                    <i class="bi bi-plus-circle display-4 text-success mb-3 d-block"></i>
-                    <h5 class="card-title text-white">Crear</h5>
-                    <p class="card-text text-muted small">Creá un nuevo proceso de licitación</p>
-                  </div>
-                </div>
-              </a>
-            </div>
-          @endif
-        </div>
-      @else
-        <div class="mt-5">
-          <h1 class="fw-bold display-4 mb-3">
-            <i class="bi bi-clipboard-data me-2"></i>Gestión de Licitaciones
-          </h1>
-          <p class="lead text-muted mb-4">
-            Sistema para la administración y seguimiento de procesos de contratación pública.
-          </p>
-          <div class="d-flex justify-content-center gap-3">
-            <a href="{{ route('login') }}" class="btn btn-primary btn-lg px-4">
-              <i class="bi bi-box-arrow-in-right me-1"></i>Iniciar sesión
-            </a>
-            <a href="{{ route('register') }}" class="btn btn-outline-secondary btn-lg px-4">
-              <i class="bi bi-person-plus me-1"></i>Registrarse
-            </a>
-          </div>
-        </div>
-      @endauth
-
+  {{-- Métricas rápidas --}}
+  <div class="dashboard-grid mb-4">
+    <div class="metric-card" style="background: linear-gradient(135deg, #1a365d, #2b6cb0);">
+      <h6>Total Procesos</h6>
+      <p class="metric-value">{{ $totalProcesos ?? 0 }}</p>
+    </div>
+    <div class="metric-card" style="background: linear-gradient(135deg, #276749, #38a169);">
+      <h6>Activos</h6>
+      <p class="metric-value">{{ $activos ?? 0 }}</p>
+    </div>
+    <div class="metric-card" style="background: linear-gradient(135deg, #744210, #d69e2e);">
+      <h6>En Evaluación</h6>
+      <p class="metric-value">{{ $enEvaluacion ?? 0 }}</p>
+    </div>
+    <div class="metric-card" style="background: linear-gradient(135deg, #9b2c2c, #e53e3e);">
+      <h6>Adjudicados</h6>
+      <p class="metric-value">{{ $adjudicados ?? 0 }}</p>
     </div>
   </div>
-</main>
+
+  {{-- Accesos directos (como en el original) --}}
+  <hr class="delimitadorSuperior">
+
+  <div class="dashboard-grid">
+    <a href="{{ route('procesos.index') }}" class="dashboard-card">
+      <div class="card-icon"><i class="bi bi-search"></i></div>
+      <h3>Consultar</h3>
+      <p>Buscá y revisá procesos existentes</p>
+    </a>
+
+    @if (Auth::user()->esAdmin())
+      <a href="{{ route('procesos.create') }}" class="dashboard-card">
+        <div class="card-icon"><i class="bi bi-plus-circle"></i></div>
+        <h3>Crear</h3>
+        <p>Registrá un nuevo proceso de licitación</p>
+      </a>
+
+      <a href="{{ route('responsables.index') }}" class="dashboard-card">
+        <div class="card-icon"><i class="bi bi-people"></i></div>
+        <h3>Responsables</h3>
+        <p>Administrá los responsables de los procesos</p>
+      </a>
+
+      <a href="{{ route('usuarios.index') }}" class="dashboard-card">
+        <div class="card-icon"><i class="bi bi-person-gear"></i></div>
+        <h3>Usuarios</h3>
+        <p>Gestión de usuarios del sistema</p>
+      </a>
+    @endif
+
+    <a href="{{ route('reportes.index') }}" class="dashboard-card">
+      <div class="card-icon"><i class="bi bi-bar-chart-fill"></i></div>
+      <h3>Reportes</h3>
+      <p>Estadísticas y reportes del sistema</p>
+    </a>
+  </div>
+
+@else
+  {{-- Landing público --}}
+  <div class="text-center" style="padding-top: 4rem;">
+    <h1 class="fw-bold display-4 mb-3" style="color: var(--color-primary);">
+      <i class="bi bi-clipboard-data me-2"></i>Gestión de Licitaciones
+    </h1>
+    <p class="lead text-muted mb-4" style="max-width: 600px; margin: 0 auto;">
+      Sistema para la administración y seguimiento de procesos de contratación pública.
+    </p>
+    <div class="d-flex justify-content-center gap-3">
+      <a href="{{ route('login') }}" class="btn btn-lg px-4" style="background: var(--color-primary); color: #fff;">
+        <i class="bi bi-box-arrow-in-right me-1"></i>Iniciar sesión
+      </a>
+      <a href="{{ route('register') }}" class="btn btn-lg btn-outline-secondary px-4">
+        <i class="bi bi-person-plus me-1"></i>Registrarse
+      </a>
+    </div>
+  </div>
+@endauth
+
 @endsection

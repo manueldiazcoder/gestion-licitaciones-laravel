@@ -5,13 +5,15 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements CanResetPasswordContract
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, CanResetPassword;
 
     /**
      * The attributes that are mass assignable.
@@ -73,7 +75,13 @@ class User extends Authenticatable
     public function getRolBadge(): string
     {
         $label = $this->getRolFormateado();
-        $class = $this->esAdmin() ? 'bg-danger' : 'bg-secondary';
+        $class = match ($this->role) {
+            'admin'    => 'bg-danger',
+            'operador' => 'bg-primary',
+            'visor'    => 'bg-secondary',
+            'usuario'  => 'bg-info',
+            default    => 'bg-secondary',
+        };
 
         return "<span class=\"badge {$class}\">{$label}</span>";
     }
@@ -84,10 +92,21 @@ class User extends Authenticatable
     public function getRolFormateado(): string
     {
         return match ($this->role) {
-            'admin' => 'Administrador',
-            'visor' => 'Visor',
-            default => ucfirst($this->role),
+            'admin'    => 'Administrador',
+            'operador' => 'Operador',
+            'visor'    => 'Visor',
+            'usuario'  => 'Usuario',
+            default    => ucfirst($this->role),
         };
+    }
+
+    // ─────────────────────────────────────────
+    //  Relaciones
+    // ─────────────────────────────────────────
+
+    public function procesosCreados(): HasMany
+    {
+        return $this->hasMany(Proceso::class, 'creador_id');
     }
 
     // ─────────────────────────────────────────
