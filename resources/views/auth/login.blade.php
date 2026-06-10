@@ -62,14 +62,19 @@
                                placeholder="••••••••">
                     </div>
 
-                    <div class="mb-3 form-check">
-                        <input type="checkbox"
-                               class="form-check-input"
-                               id="remember"
-                               name="remember">
-                        <label class="form-check-label" for="remember">
-                            Recordarme
-                        </label>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="form-check mb-0">
+                            <input type="checkbox"
+                                   class="form-check-input"
+                                   id="remember"
+                                   name="remember">
+                            <label class="form-check-label" for="remember">
+                                Recordarme
+                            </label>
+                        </div>
+                        <a href="{{ route('password.request') }}" class="small text-decoration-none">
+                            ¿Olvidaste tu contraseña?
+                        </a>
                     </div>
 
                     <div class="d-grid gap-2">
