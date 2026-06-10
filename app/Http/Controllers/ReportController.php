@@ -13,6 +13,7 @@ class ReportController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('role:admin')->only('exportCsv');
     }
 
     /**
@@ -48,9 +49,14 @@ class ReportController extends Controller
         $presupuestoPorMoneda = $porMoneda->pluck('presupuesto', 'moneda');
         $totalPorMoneda       = $porMoneda->pluck('total', 'moneda');
 
+        $driver = DB::connection()->getDriverName();
+        $dateExpr = $driver === 'sqlite'
+            ? "strftime('%Y-%m', created_at)"
+            : "DATE_FORMAT(created_at, '%Y-%m')";
+
         $meses = Proceso::selectRaw(
-            "DATE_FORMAT(created_at, '%Y-%m') as mes,
-             COUNT(*)                          as total"
+            "{$dateExpr} as mes,
+             COUNT(*)     as total"
         )
             ->groupBy('mes')
             ->orderBy('mes')
