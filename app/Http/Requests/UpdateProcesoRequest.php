@@ -22,8 +22,10 @@ class UpdateProcesoRequest extends FormRequest
             'presupuesto'  => ['sometimes', 'required', 'numeric', 'min:0', 'max:999999999'],
             'fecha_inicio' => ['sometimes', 'required', 'date', 'before_or_equal:fecha_cierre'],
             'hora_inicio'  => ['sometimes', 'required', 'date_format:H:i'],
-            'fecha_cierre' => ['sometimes', 'required', 'date', 'after_or_equal:fecha_inicio'],
-            'hora_cierre'  => ['sometimes', 'required', 'date_format:H:i'],
+            'fecha_cierre'   => ['sometimes', 'required', 'date', 'after_or_equal:fecha_inicio'],
+            'hora_cierre'    => ['sometimes', 'required', 'date_format:H:i'],
+            'estado'         => ['nullable', 'string', 'in:borrador,activo,evaluacion,adjudicado,cancelado'],
+            'responsable_id' => ['nullable', 'integer', 'exists:responsables,id'],
         ];
     }
 

@@ -4,7 +4,9 @@
 
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0"><i class="bi bi-search me-2"></i>Consultar Procesos</h4>
+    <h4 class="mb-0 fw-bold" style="color: var(--color-primary);">
+        <i class="bi bi-search me-2"></i>Consultar Procesos
+    </h4>
     @if (Auth::user()?->esAdmin())
         <a href="{{ route('procesos.create') }}" class="btn btn-success btn-sm">
             <i class="bi bi-plus-circle me-1"></i>Nuevo Proceso
@@ -13,7 +15,7 @@
 </div>
 
 {{-- Filtros --}}
-<form method="GET" action="{{ route('procesos.index') }}" class="row g-2 mb-4">
+<form method="GET" action="{{ route('procesos.index') }}" class="row g-2 mb-4 p-3 bg-white rounded shadow-sm border">
     <div class="col-md-4">
         <input type="text" name="search" class="form-control form-control-sm"
                placeholder="Buscar por objeto, descripción..."
@@ -45,17 +47,10 @@
     </div>
 </form>
 
-@if (session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-@endif
-
 {{-- Tabla --}}
 <div class="table-responsive">
-    <table class="table table-dark table-hover table-bordered align-middle">
-        <thead class="table-secondary text-dark">
+    <table class="table table-licitaciones table-bordered align-middle mb-0">
+        <thead>
             <tr>
                 <th>#</th>
                 <th>Objeto</th>
@@ -63,7 +58,6 @@
                 <th>Moneda</th>
                 <th>Inicio</th>
                 <th>Cierre</th>
-                {{-- <th>Creado</th> --}}
                 <th class="text-center">Acciones</th>
             </tr>
         </thead>
@@ -72,14 +66,14 @@
                 <tr>
                     <td class="text-center fw-bold">{{ $proceso->codigo_proceso }}</td>
                     <td>
-                        <a href="{{ route('procesos.show', $proceso) }}" class="text-decoration-none fw-semibold">
+                        <a href="{{ route('procesos.show', $proceso) }}" class="text-decoration-none fw-semibold" style="color: var(--color-primary);">
                             {{ Str::limit($proceso->objeto, 60) }}
                         </a>
                         @if ($proceso->actividad)
                             <br><small class="text-muted">{{ Str::limit($proceso->actividad, 40) }}</small>
                         @endif
                     </td>
-                    <td class="text-end">{{ $proceso->presupuesto_formateado }}</td>
+                    <td class="text-end fw-semibold">{{ $proceso->presupuesto_formateado }}</td>
                     <td>{{ $proceso->moneda }}</td>
                     <td>
                         <span class="small">
@@ -128,7 +122,7 @@
 </div>
 
 {{-- Paginación --}}
-<div class="d-flex justify-content-center">
+<div class="d-flex justify-content-center mt-3">
     {{ $procesos->links() }}
 </div>
 @endsection
