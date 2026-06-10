@@ -21,46 +21,60 @@ class ReportController extends Controller
      */
     public function index()
     {
-        $totalProcesos   = Proceso::count();
-        $presupuestoTotal = Proceso::sum('presupuesto');
-        $promedioPresupuesto = $totalProcesos > 0
-            ? round(Proceso::avg('presupuesto'), 2)
-            : 0;
+        // Valores por defecto seguros
+        $totalProcesos      = 0;
+        $presupuestoTotal   = 0;
+        $promedioPresupuesto = 0;
+        $porMoneda          = collect();
+        $proximosCerrar     = collect();
+        $presupuestoPorMoneda = collect();
+        $totalPorMoneda     = collect();
+        $meses              = collect();
 
-        // Distribución por moneda
-        $porMoneda = Proceso::selectRaw(
-            "moneda,
-             COUNT(*)                               as total,
-             SUM(presupuesto)                        as presupuesto,
-             ROUND(AVG(presupuesto), 2)              as promedio,
-             ROUND(COUNT(*) * 100.0 / NULLIF((SELECT COUNT(*) FROM procesos), 0), 1) as porcentaje"
-        )
-            ->groupBy('moneda')
-            ->orderByDesc('total')
-            ->get();
+        try {
+            $totalProcesos   = Proceso::count();
+            $presupuestoTotal = Proceso::sum('presupuesto');
+            $promedioPresupuesto = $totalProcesos > 0
+                ? round(Proceso::avg('presupuesto'), 2)
+                : 0;
 
-        // Próximos a cerrar (próximos 30 días)
-        $proximosCerrar = Proceso::whereDate('fecha_cierre', '>=', now())
-            ->whereDate('fecha_cierre', '<=', now()->addDays(30))
-            ->orderBy('fecha_cierre')
-            ->get();
+            // Distribución por moneda
+            $porMoneda = Proceso::selectRaw(
+                "moneda,
+                 COUNT(*)                               as total,
+                 SUM(presupuesto)                        as presupuesto,
+                 ROUND(AVG(presupuesto), 2)              as promedio,
+                 ROUND(COUNT(*) * 100.0 / NULLIF((SELECT COUNT(*) FROM procesos), 0), 1) as porcentaje"
+            )
+                ->groupBy('moneda')
+                ->orderByDesc('total')
+                ->get();
 
-        // Presupuesto total por moneda para las cards
-        $presupuestoPorMoneda = $porMoneda->pluck('presupuesto', 'moneda');
-        $totalPorMoneda       = $porMoneda->pluck('total', 'moneda');
+            // Próximos a cerrar (próximos 30 días)
+            $proximosCerrar = Proceso::whereDate('fecha_cierre', '>=', now())
+                ->whereDate('fecha_cierre', '<=', now()->addDays(30))
+                ->orderBy('fecha_cierre')
+                ->get();
 
-        $driver = DB::connection()->getDriverName();
-        $dateExpr = $driver === 'sqlite'
-            ? "strftime('%Y-%m', created_at)"
-            : "DATE_FORMAT(created_at, '%Y-%m')";
+            // Presupuesto total por moneda para las cards
+            $presupuestoPorMoneda = $porMoneda->pluck('presupuesto', 'moneda');
+            $totalPorMoneda       = $porMoneda->pluck('total', 'moneda');
 
-        $meses = Proceso::selectRaw(
-            "{$dateExpr} as mes,
-             COUNT(*)     as total"
-        )
-            ->groupBy('mes')
-            ->orderBy('mes')
-            ->get();
+            $driver = DB::connection()->getDriverName();
+            $dateExpr = $driver === 'sqlite'
+                ? "strftime('%Y-%m', created_at)"
+                : "DATE_FORMAT(created_at, '%Y-%m')";
+
+            $meses = Proceso::selectRaw(
+                "{$dateExpr} as mes,
+                 COUNT(*)     as total"
+            )
+                ->groupBy('mes')
+                ->orderBy('mes')
+                ->get();
+        } catch (\Throwable $e) {
+            // DB sin migraciones o sin datos — valores por defecto
+        }
 
         return view('reportes.index', compact(
             'totalProcesos',

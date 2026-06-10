@@ -8,9 +8,6 @@ use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
         // Usuario administrador por defecto
@@ -36,5 +33,11 @@ class DatabaseSeeder extends Seeder
         $this->command->info('Usuarios por defecto creados:');
         $this->command->info('  admin / admin@admin.com / admin');
         $this->command->info('  visor / visor@visor.com / visor');
+
+        // Seeders de datos
+        $this->call(ResponsableSeeder::class);
+        $this->call(ProcesoSeeder::class);
+
+        $this->command->info('¡Todos los datos semilla fueron creados!');
     }
 }
