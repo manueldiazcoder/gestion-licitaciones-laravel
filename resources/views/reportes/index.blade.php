@@ -20,7 +20,7 @@
 <div class="collapse mb-4" id="exportPanel">
     <div class="card border-success shadow-sm">
         <div class="card-header bg-success text-white">
-            <i class="bi bi-file-earmark-spreadsheet me-1"></i>Exportar procesos
+            <i class="bi bi-file-earmark-spreadsheet me-1"></i>Exportar licitaciones
         </div>
         <div class="card-body">
             <form action="{{ route('reportes.export') }}" method="GET" class="row g-3 align-items-end">
@@ -63,8 +63,8 @@
         <div class="card border-primary h-100 shadow-sm">
             <div class="card-body text-center">
                 <div class="text-primary display-6 mb-2"><i class="bi bi-folder"></i></div>
-                <h5 class="card-title">Total procesos</h5>
-                <p class="display-5 fw-bold text-primary mb-0">{{ number_format($totalProcesos) }}</p>
+                <h5 class="card-title">Total licitaciones</h5>
+                <p class="display-5 fw-bold text-primary mb-0">{{ number_format($totalLicitaciones) }}</p>
 
                 {{-- Desglose por estado --}}
                 <hr class="my-2">
@@ -169,7 +169,7 @@
             </div>
             <div class="card-body">
                 @if ($proximosCerrar->isEmpty())
-                    <p class="text-muted text-center my-4">No hay procesos próximos a cerrar.</p>
+                    <p class="text-muted text-center my-4">No hay licitaciones próximas a cerrar.</p>
                 @else
                     <div class="table-responsive">
                         <table class="table table-sm table-hover mb-0">
@@ -185,8 +185,8 @@
                                 @foreach ($proximosCerrar as $p)
                                     <tr>
                                         <td>
-                                            <a href="{{ route('procesos.show', $p) }}" class="text-decoration-none fw-semibold" style="color: var(--color-primary);">
-                                                {{ $p->codigo_proceso }}
+                                            <a href="{{ route('licitaciones.show', $p) }}" class="text-decoration-none fw-semibold" style="color: var(--color-primary);">
+                                                {{ $p->codigo_licitacion }}
                                             </a>
                                         </td>
                                         <td>{{ Str::limit($p->objeto, 40) }}</td>
@@ -208,13 +208,13 @@
     </div>
 </div>
 
-{{-- Procesos por mes --}}
+{{-- Licitaciones por mes --}}
 @if ($meses->isNotEmpty())
 <div class="row mt-3">
     <div class="col-12">
         <div class="card border-info shadow-sm">
             <div class="card-header" style="background: var(--color-primary); color: #fff;">
-                <i class="bi bi-calendar-week me-1"></i>Procesos creados por mes
+                <i class="bi bi-calendar-week me-1"></i>Licitaciones creadas por mes
             </div>
             <div class="card-body">
                 <div class="d-flex align-items-end gap-3 flex-wrap">

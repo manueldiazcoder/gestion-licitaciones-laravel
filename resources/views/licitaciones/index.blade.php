@@ -1,29 +1,29 @@
 @extends('layouts.base')
 
-@section('title', 'Consultar Procesos')
+@section('title', 'Consultar Licitaciones')
 
 @section('content')
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
     <h4 class="mb-0 fw-bold" style="color: var(--color-primary);">
-        <i class="bi bi-search me-2"></i>Consultar Procesos
+        <i class="bi bi-search me-2"></i>Consultar Licitaciones
     </h4>
     <div class="d-flex gap-2">
-        <a href="{{ route('procesos.export', request()->query()) }}" class="btn btn-outline-success btn-sm">
+        <a href="{{ route('licitaciones.export', request()->query()) }}" class="btn btn-outline-success btn-sm">
             <i class="bi bi-file-earmark-spreadsheet me-1"></i>Exportar CSV
         </a>
         @if (Auth::user()?->esAdmin())
-            <a href="{{ route('procesos.create') }}" class="btn btn-success btn-sm">
-                <i class="bi bi-plus-circle me-1"></i>Nuevo Proceso
+            <a href="{{ route('licitaciones.create') }}" class="btn btn-success btn-sm">
+                <i class="bi bi-plus-circle me-1"></i>Nueva Licitación
             </a>
         @endif
     </div>
 </div>
 
 {{-- Filtros --}}
-<form method="GET" action="{{ route('procesos.index') }}" class="card shadow-sm border mb-4">
+<form method="GET" action="{{ route('licitaciones.index') }}" class="card shadow-sm border mb-4">
     <div class="card-body">
         <h6 class="card-title text-secondary mb-3">
-            <i class="bi bi-funnel me-1"></i>Buscar procesos
+            <i class="bi bi-funnel me-1"></i>Buscar licitaciones
         </h6>
         <div class="row g-3">
             {{-- Fila 1: todos los inputs de filtro --}}
@@ -70,7 +70,7 @@
         </div>
         {{-- Fila 2: botones abajo a la derecha --}}
         <div class="d-flex justify-content-end gap-2 mt-3">
-            <a href="{{ route('procesos.index') }}" class="btn btn-outline-secondary btn-sm">
+            <a href="{{ route('licitaciones.index') }}" class="btn btn-outline-secondary btn-sm">
                 <i class="bi bi-x-circle me-1"></i>Limpiar
             </a>
             <button type="submit" class="btn btn-primary btn-sm">
@@ -95,43 +95,43 @@
             </tr>
         </thead>
         <tbody>
-            @forelse ($procesos as $proceso)
+            @forelse ($licitaciones as $licitacion)
                 <tr>
-                    <td class="text-center fw-bold">{{ $proceso->codigo_proceso }}</td>
+                    <td class="text-center fw-bold">{{ $licitacion->codigo_licitacion }}</td>
                     <td>
-                        <a href="{{ route('procesos.show', $proceso) }}" class="text-decoration-none fw-semibold" style="color: var(--color-primary);">
-                            {{ Str::limit($proceso->objeto, 60) }}
+                        <a href="{{ route('licitaciones.show', $licitacion) }}" class="text-decoration-none fw-semibold" style="color: var(--color-primary);">
+                            {{ Str::limit($licitacion->objeto, 60) }}
                         </a>
-                        @if ($proceso->actividad)
-                            <br><small class="text-muted">{{ Str::limit($proceso->actividad, 40) }}</small>
+                        @if ($licitacion->actividad)
+                            <br><small class="text-muted">{{ Str::limit($licitacion->actividad, 40) }}</small>
                         @endif
                     </td>
                     <td>
-                        <span class="badge {{ \App\Models\Proceso::COLORES_ESTADO[$proceso->estado] ?? 'bg-secondary' }}">
-                            {{ $proceso->estado }}
+                        <span class="badge {{ \App\Models\Proceso::COLORES_ESTADO[$licitacion->estado] ?? 'bg-secondary' }}">
+                            {{ $licitacion->estado }}
                         </span>
                     </td>
-                    <td>{{ $proceso->responsable?->nombre_completo ?: '—' }}</td>
+                    <td>{{ $licitacion->responsable?->nombre_completo ?: '—' }}</td>
                     <td class="small">
-                        <i class="bi bi-calendar"></i> {{ $proceso->fecha_inicio->format('d/m/Y') }}
-                        <br><i class="bi bi-clock"></i> {{ $proceso->hora_inicio }}
+                        <i class="bi bi-calendar"></i> {{ $licitacion->fecha_inicio->format('d/m/Y') }}
+                        <br><i class="bi bi-clock"></i> {{ $licitacion->hora_inicio }}
                     </td>
                     <td class="small">
-                        <i class="bi bi-calendar"></i> {{ $proceso->fecha_cierre->format('d/m/Y') }}
-                        <br><i class="bi bi-clock"></i> {{ $proceso->hora_cierre }}
+                        <i class="bi bi-calendar"></i> {{ $licitacion->fecha_cierre->format('d/m/Y') }}
+                        <br><i class="bi bi-clock"></i> {{ $licitacion->hora_cierre }}
                     </td>
                     <td class="text-center">
                         <div class="d-flex justify-content-center gap-1">
-                            <a href="{{ route('procesos.show', $proceso) }}"
+                            <a href="{{ route('licitaciones.show', $licitacion) }}"
                                class="btn btn-outline-info btn-sm" title="Ver">
                                 <i class="bi bi-eye"></i>
                             </a>
                             @if (Auth::user()?->esAdmin())
-                                <a href="{{ route('procesos.edit', $proceso) }}"
+                                <a href="{{ route('licitaciones.edit', $licitacion) }}"
                                    class="btn btn-outline-warning btn-sm" title="Editar">
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <form action="{{ route('procesos.destroy', $proceso) }}"
+                                <form action="{{ route('licitaciones.destroy', $licitacion) }}"
                                       method="POST" class="d-inline"
                                       onsubmit="return confirm('¿Eliminar este proceso?')">
                                     @csrf @method('DELETE')
@@ -146,7 +146,7 @@
             @empty
                 <tr>
                     <td colspan="7" class="text-center text-muted py-4">
-                        <i class="bi bi-inbox me-2"></i>No se encontraron procesos.
+                        <i class="bi bi-inbox me-2"></i>No se encontraron licitaciones.
                     </td>
                 </tr>
             @endforelse
@@ -156,6 +156,6 @@
 
 {{-- Paginación --}}
 <div class="d-flex justify-content-center mt-3">
-    {{ $procesos->links() }}
+    {{ $licitaciones->links() }}
 </div>
 @endsection

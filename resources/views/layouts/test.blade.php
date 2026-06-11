@@ -1,6 +1,6 @@
 <!-- @section('header') -->
 <!-- CONDICIONAL PARA REVISAR DE QUE RUTA VIENE PARA PONER EN EL TITULO -->
-  <!-- @if (request()->is('/procesos/crearProceso'))
+  <!-- @if (request()->is('/licitaciones/crearLicitacion'))
   <ul class="nav nav-tabs">
   <!-- AQUÍ SE DEBE RECIBIR UN ARRAY CON LAS PESTAÑAS QUE SON NECESARIAS PARA CADA VISTA -->
   <!-- @foreach ($childrens as $children)

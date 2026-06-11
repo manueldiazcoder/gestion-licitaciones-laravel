@@ -2,13 +2,13 @@
 
 namespace Database\Seeders;
 
-use App\Models\Proceso;
+use App\Models\Licitacion;
 use App\Models\Responsable;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
-class ProcesoSeeder extends Seeder
+class LicitacionSeeder extends Seeder
 {
     public function run(): void
     {
@@ -149,13 +149,13 @@ class ProcesoSeeder extends Seeder
             $data['creador_id']     = $adminId;
             $data['responsable_id'] = $responsables->random()->id;
 
-            Proceso::firstOrCreate(
+            Licitacion::firstOrCreate(
                 ['objeto' => $data['objeto']],
                 $data
             );
             $count++;
         }
 
-        $this->command->info("Procesos creados: {$count}");
+        $this->command->info("Licitaciones creadas: {$count}");
     }
 }

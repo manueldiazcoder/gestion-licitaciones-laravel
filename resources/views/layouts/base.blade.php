@@ -28,13 +28,13 @@
     @auth
       <ul class="navbar-app-nav">
         <li>
-          <a href="{{ route('procesos.index') }}" class="@if(Request::routeIs('procesos.*')) active @endif">
+          <a href="{{ route('licitaciones.index') }}" class="@if(Request::routeIs('licitaciones.*')) active @endif">
             <i class="bi bi-search"></i> Consultar
           </a>
         </li>
         @if (Auth::user()->esAdmin())
           <li>
-            <a href="{{ route('procesos.create') }}" class="@if(Request::routeIs('procesos.create') || Request::routeIs('procesos.store')) active @endif">
+            <a href="{{ route('licitaciones.create') }}" class="@if(Request::routeIs('licitaciones.create') || Request::routeIs('licitaciones.store')) active @endif">
               <i class="bi bi-plus-circle"></i> Crear
             </a>
           </li>

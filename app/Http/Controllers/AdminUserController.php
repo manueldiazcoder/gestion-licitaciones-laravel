@@ -17,7 +17,7 @@ class AdminUserController extends Controller
 
     public function index(): View
     {
-        $usuarios = User::withCount('procesosCreados')
+        $usuarios = User::withCount('licitacionesCreadas')
             ->orderBy('name')
             ->paginate(20);
 
@@ -50,9 +50,9 @@ class AdminUserController extends Controller
                 ->with('error', 'No podés eliminarte a vos mismo.');
         }
 
-        if ($user->procesosCreados()->count() > 0) {
+        if ($user->licitacionesCreadas()->count() > 0) {
             return redirect()->route('usuarios.index')
-                ->with('error', 'No se puede eliminar un usuario con procesos asociados.');
+                ->with('error', 'No se puede eliminar un usuario con licitaciones asociadas.');
         }
 
         $user->delete();

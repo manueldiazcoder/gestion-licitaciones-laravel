@@ -6,11 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Proceso extends Model
+class Licitacion extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'codigo_proceso';
+    protected $table = 'licitaciones';
+
+    protected $primaryKey = 'codigo_licitacion';
 
     protected $fillable = [
         'objeto',
@@ -131,7 +133,7 @@ class Proceso extends Model
     public function scopeById($query, ?string $id)
     {
         if ($id) {
-            $query->where('codigo_proceso', $id);
+            $query->where('codigo_licitacion', $id);
         }
     }
 

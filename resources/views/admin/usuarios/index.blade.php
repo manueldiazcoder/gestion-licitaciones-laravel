@@ -18,7 +18,7 @@
                     <th>Nombre</th>
                     <th>Email</th>
                     <th>Rol</th>
-                    <th class="text-center">Procesos</th>
+                    <th class="text-center">Licitaciones</th>
                     <th>Registro</th>
                     <th class="text-center">Acciones</th>
                 </tr>
@@ -33,7 +33,7 @@
                         <td>{{ $u->email }}</td>
                         <td>{!! $u->getRolBadge() !!}</td>
                         <td class="text-center">
-                            <span class="badge bg-secondary">{{ $u->procesos_creados_count }}</span>
+                            <span class="badge bg-secondary">{{ $u->licitaciones_creadas_count }}</span>
                         </td>
                         <td class="small">{{ $u->created_at?->format('d/m/Y H:i') ?? '—' }}</td>
                         <td class="text-center">

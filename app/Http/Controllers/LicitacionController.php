@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Proceso;
+use App\Models\Licitacion;
 use App\Models\Responsable;
-use App\Http\Requests\StoreProcesoRequest;
-use App\Http\Requests\UpdateProcesoRequest;
+use App\Http\Requests\StoreLicitacionRequest;
+use App\Http\Requests\UpdateLicitacionRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-class ProcesoController extends Controller
+class LicitacionController extends Controller
 {
     public function __construct()
     {
@@ -18,7 +18,7 @@ class ProcesoController extends Controller
 
     public function index(Request $request)
     {
-        $procesos = Proceso::query()
+        $licitaciones = Licitacion::query()
             ->search($request->query('search'))
             ->byId($request->query('codigo'))
             ->byResponsable($request->query('responsable_id'))
@@ -30,16 +30,16 @@ class ProcesoController extends Controller
 
         $responsables = Responsable::orderBy('nombre_completo')->get(['id', 'nombre_completo']);
 
-        return view('procesos.index', compact('procesos', 'responsables'));
+        return view('licitaciones.index', compact('licitaciones', 'responsables'));
     }
 
     public function create()
     {
         $responsables = Responsable::orderBy('nombre_completo')->get();
-        return view('procesos.create', compact('responsables'));
+        return view('licitaciones.create', compact('responsables'));
     }
 
-    public function store(StoreProcesoRequest $request)
+    public function store(StoreLicitacionRequest $request)
     {
         $data = $request->validated();
         $data['creador_id'] = auth()->id();
@@ -48,58 +48,58 @@ class ProcesoController extends Controller
             $data['estado'] = 'Borrador';
         }
 
-        $proceso = Proceso::create($data);
+        $licitacion = Licitacion::create($data);
 
-        Log::info('Proceso creado', [
-            'codigo' => $proceso->codigo_proceso,
-            'objeto' => $proceso->objeto,
+        Log::info('Licitación creada', [
+            'codigo' => $licitacion->codigo_licitacion,
+            'objeto' => $licitacion->objeto,
             'user'   => auth()->user()->email,
         ]);
 
         return redirect()
-            ->route('procesos.show', $proceso)
-            ->with('success', 'Proceso creado correctamente.');
+            ->route('licitaciones.show', $licitacion)
+            ->with('success', 'Licitación creada correctamente.');
     }
 
-    public function show(Proceso $proceso)
+    public function show(Licitacion $licitacion)
     {
-        return view('procesos.show', compact('proceso'));
+        return view('licitaciones.show', compact('licitacion'));
     }
 
-    public function edit(Proceso $proceso)
+    public function edit(Licitacion $licitacion)
     {
         $responsables = Responsable::orderBy('nombre_completo')->get();
-        return view('procesos.edit', compact('proceso', 'responsables'));
+        return view('licitaciones.edit', compact('licitacion', 'responsables'));
     }
 
-    public function update(UpdateProcesoRequest $request, Proceso $proceso)
+    public function update(UpdateLicitacionRequest $request, Licitacion $licitacion)
     {
-        $proceso->update($request->validated());
+        $licitacion->update($request->validated());
 
-        Log::info('Proceso actualizado', [
-            'codigo' => $proceso->codigo_proceso,
+        Log::info('Licitación actualizada', [
+            'codigo' => $licitacion->codigo_licitacion,
             'user'   => auth()->user()->email,
         ]);
 
         return redirect()
-            ->route('procesos.show', $proceso)
-            ->with('success', 'Proceso actualizado correctamente.');
+            ->route('licitaciones.show', $licitacion)
+            ->with('success', 'Licitación actualizada correctamente.');
     }
 
     public function exportCsv(Request $request)
     {
-        $procesos = Proceso::query()
+        $licitaciones = Licitacion::query()
             ->search($request->query('search'))
             ->byId($request->query('codigo'))
             ->byResponsable($request->query('responsable_id'))
             ->byEstado($request->query('estado'))
             ->byDateRange($request->query('desde'), $request->query('hasta'))
-            ->orderBy('codigo_proceso')
+            ->orderBy('codigo_licitacion')
             ->get();
 
-        $filename = 'procesos_' . now()->format('Y-m-d_His') . '.csv';
+        $filename = 'licitaciones_' . now()->format('Y-m-d_His') . '.csv';
 
-        return response()->streamDownload(function () use ($procesos) {
+        return response()->streamDownload(function () use ($licitaciones) {
             $output = fopen('php://output', 'w');
             fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF)); // BOM Excel
 
@@ -109,9 +109,9 @@ class ProcesoController extends Controller
                 'Presupuesto', 'Moneda', 'Responsable',
             ]);
 
-            foreach ($procesos as $p) {
+            foreach ($licitaciones as $p) {
                 fputcsv($output, [
-                    $p->codigo_proceso,
+                    $p->codigo_licitacion,
                     $p->objeto,
                     $p->descripcion,
                     $p->estado ?: '—',
@@ -129,18 +129,18 @@ class ProcesoController extends Controller
         }, $filename, ['Content-Type' => 'text/csv; charset=UTF-8']);
     }
 
-    public function destroy(Proceso $proceso)
+    public function destroy(Licitacion $licitacion)
     {
-        $proceso->delete();
+        $licitacion->delete();
 
-        Log::info('Proceso eliminado', [
-            'codigo' => $proceso->codigo_proceso,
-            'objeto' => $proceso->objeto,
+        Log::info('Licitación eliminada', [
+            'codigo' => $licitacion->codigo_licitacion,
+            'objeto' => $licitacion->objeto,
             'user'   => auth()->user()->email,
         ]);
 
         return redirect()
-            ->route('procesos.index')
-            ->with('success', 'Proceso eliminado correctamente.');
+            ->route('licitaciones.index')
+            ->with('success', 'Licitación eliminada correctamente.');
     }
 }

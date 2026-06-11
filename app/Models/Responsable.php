@@ -18,8 +18,8 @@ class Responsable extends Model
         'correo_electronico',
     ];
 
-    public function procesos(): HasMany
+    public function licitaciones(): HasMany
     {
-        return $this->hasMany(Proceso::class, 'responsable_id');
+        return $this->hasMany(Licitacion::class, 'responsable_id');
     }
 }

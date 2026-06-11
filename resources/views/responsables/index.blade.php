@@ -21,7 +21,7 @@
                     <th>Nombre completo</th>
                     <th>Teléfono</th>
                     <th>Correo electrónico</th>
-                    <th class="text-center">Procesos</th>
+                    <th class="text-center">Licitaciones</th>
                     <th class="text-center">Acciones</th>
                 </tr>
             </thead>
@@ -39,7 +39,7 @@
                             @endif
                         </td>
                         <td class="text-center">
-                            <span class="badge bg-secondary">{{ $r->procesos_count }}</span>
+                            <span class="badge bg-secondary">{{ $r->licitaciones_count }}</span>
                         </td>
                         <td class="text-center">
                             <div class="d-flex justify-content-center gap-1">

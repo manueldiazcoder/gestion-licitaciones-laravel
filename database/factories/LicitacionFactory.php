@@ -2,15 +2,15 @@
 
 namespace Database\Factories;
 
-use App\Models\Proceso;
+use App\Models\Licitacion;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Proceso>
  */
-class ProcesoFactory extends Factory
+class LicitacionFactory extends Factory
 {
-    protected $model = Proceso::class;
+    protected $model = Licitacion::class;
 
     private static array $monedas = ['COP', 'USD', 'EUR'];
 

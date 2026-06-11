@@ -16,7 +16,7 @@ class ResponsableController extends Controller
 
     public function index(): View
     {
-        $responsables = Responsable::withCount('procesos')
+        $responsables = Responsable::withCount('licitaciones')
             ->orderBy('nombre_completo')
             ->paginate(20);
 
@@ -63,9 +63,9 @@ class ResponsableController extends Controller
 
     public function destroy(Responsable $responsable): RedirectResponse
     {
-        if ($responsable->procesos()->count() > 0) {
+        if ($responsable->licitaciones()->count() > 0) {
             return redirect()->route('responsables.index')
-                ->with('error', 'No se puede eliminar un responsable con procesos asociados.');
+                ->with('error', 'No se puede eliminar un responsable con licitaciones asociadas.');
         }
 
         $responsable->delete();

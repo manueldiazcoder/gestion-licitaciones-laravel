@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
 
         // Seeders de datos
         $this->call(ResponsableSeeder::class);
-        $this->call(ProcesoSeeder::class);
+        $this->call(LicitacionSeeder::class);
 
         $this->command->info('¡Todos los datos semilla fueron creados!');
     }

@@ -96,9 +96,9 @@ class User extends Authenticatable implements CanResetPasswordContract
     //  Relaciones
     // ─────────────────────────────────────────
 
-    public function procesosCreados(): HasMany
+    public function licitacionesCreadas(): HasMany
     {
-        return $this->hasMany(Proceso::class, 'creador_id');
+        return $this->hasMany(Licitacion::class, 'creador_id');
     }
 
     // ─────────────────────────────────────────

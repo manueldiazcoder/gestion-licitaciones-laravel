@@ -19,23 +19,23 @@
   <hr class="delimitadorSuperior">
 
   <div class="dashboard-grid">
-    <a href="{{ route('procesos.index') }}" class="dashboard-card">
+    <a href="{{ route('licitaciones.index') }}" class="dashboard-card">
       <div class="card-icon"><i class="bi bi-search"></i></div>
       <h3>Consultar</h3>
-      <p>Buscá y revisá procesos existentes</p>
+      <p>Buscá y revisá licitaciones existentes</p>
     </a>
 
     @if (Auth::user()->esAdmin())
-      <a href="{{ route('procesos.create') }}" class="dashboard-card">
+      <a href="{{ route('licitaciones.create') }}" class="dashboard-card">
         <div class="card-icon"><i class="bi bi-plus-circle"></i></div>
         <h3>Crear</h3>
-        <p>Registrá un nuevo proceso de licitación</p>
+        <p>Registrá un nueva licitación</p>
       </a>
 
       <a href="{{ route('responsables.index') }}" class="dashboard-card">
         <div class="card-icon"><i class="bi bi-people"></i></div>
         <h3>Responsables</h3>
-        <p>Administrá los responsables de los procesos</p>
+        <p>Administrá los responsables de las licitaciones</p>
       </a>
 
       <a href="{{ route('usuarios.index') }}" class="dashboard-card">
@@ -59,7 +59,7 @@
       <i class="bi bi-clipboard-data me-2"></i>Gestión de Licitaciones
     </h1>
     <p class="lead text-muted mb-4" style="max-width: 600px; margin: 0 auto;">
-      Sistema para la administración y seguimiento de procesos de contratación pública.
+      Sistema para la administración y seguimiento de licitaciones de contratación pública.
     </p>
     <div class="d-flex justify-content-center gap-3">
       <a href="{{ route('login') }}" class="btn btn-lg px-4" style="background: var(--color-primary); color: #fff;">

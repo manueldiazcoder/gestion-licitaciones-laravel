@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\Proceso;
+use App\Models\Licitacion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -22,7 +22,7 @@ class ReportController extends Controller
     public function index()
     {
         // Valores por defecto seguros
-        $totalProcesos      = 0;
+        $totalLicitaciones      = 0;
         $publicados         = 0;
         $enEvaluacion       = 0;
         $adjudicados        = 0;
@@ -35,29 +35,29 @@ class ReportController extends Controller
         $meses              = collect();
 
         try {
-            $totalProcesos   = Proceso::count();
-            $publicados      = Proceso::where('estado', 'Publicado')->count();
-            $enEvaluacion    = Proceso::where('estado', 'En evaluación')->count();
-            $adjudicados     = Proceso::where('estado', 'Adjudicado')->count();
-            $presupuestoTotal = Proceso::sum('presupuesto');
-            $promedioPresupuesto = $totalProcesos > 0
-                ? round(Proceso::avg('presupuesto'), 2)
+            $totalLicitaciones   = Licitacion::count();
+            $publicados      = Licitacion::where('estado', 'Publicado')->count();
+            $enEvaluacion    = Licitacion::where('estado', 'En evaluación')->count();
+            $adjudicados     = Licitacion::where('estado', 'Adjudicado')->count();
+            $presupuestoTotal = Licitacion::sum('presupuesto');
+            $promedioPresupuesto = $totalLicitaciones > 0
+                ? round(Licitacion::avg('presupuesto'), 2)
                 : 0;
 
             // Distribución por moneda
-            $porMoneda = Proceso::selectRaw(
+            $porMoneda = Licitacion::selectRaw(
                 "moneda,
                  COUNT(*)                               as total,
                  SUM(presupuesto)                        as presupuesto,
                  ROUND(AVG(presupuesto), 2)              as promedio,
-                 ROUND(COUNT(*) * 100.0 / NULLIF((SELECT COUNT(*) FROM procesos), 0), 1) as porcentaje"
+                 ROUND(COUNT(*) * 100.0 / NULLIF((SELECT COUNT(*) FROM licitaciones), 0), 1) as porcentaje"
             )
                 ->groupBy('moneda')
                 ->orderByDesc('total')
                 ->get();
 
             // Próximos a cerrar (próximos 30 días)
-            $proximosCerrar = Proceso::whereDate('fecha_cierre', '>=', now())
+            $proximosCerrar = Licitacion::whereDate('fecha_cierre', '>=', now())
                 ->whereDate('fecha_cierre', '<=', now()->addDays(30))
                 ->orderBy('fecha_cierre')
                 ->get();
@@ -71,7 +71,7 @@ class ReportController extends Controller
                 ? "strftime('%Y-%m', created_at)"
                 : "DATE_FORMAT(created_at, '%Y-%m')";
 
-            $meses = Proceso::selectRaw(
+            $meses = Licitacion::selectRaw(
                 "{$dateExpr} as mes,
                  COUNT(*)     as total"
             )
@@ -83,7 +83,7 @@ class ReportController extends Controller
         }
 
         return view('reportes.index', compact(
-            'totalProcesos',
+            'totalLicitaciones',
             'publicados',
             'enEvaluacion',
             'adjudicados',
@@ -98,11 +98,11 @@ class ReportController extends Controller
     }
 
     /**
-     * Exportar procesos a CSV.
+     * Exportar licitaciones a CSV.
      */
     public function exportCsv(Request $request)
     {
-        $query = Proceso::query();
+        $query = Licitacion::query();
 
         // Filtros opcionales
         if ($request->filled('search')) {
@@ -118,11 +118,11 @@ class ReportController extends Controller
             $query->whereDate('fecha_cierre', '<=', $request->fecha_hasta);
         }
 
-        $procesos = $query->orderBy('fecha_inicio')->get();
+        $licitaciones = $query->orderBy('fecha_inicio')->get();
 
-        $filename = 'procesos_' . now()->format('Y-m-d_His') . '.csv';
+        $filename = 'licitaciones_' . now()->format('Y-m-d_His') . '.csv';
 
-        return response()->streamDownload(function () use ($procesos) {
+        return response()->streamDownload(function () use ($licitaciones) {
             $output = fopen('php://output', 'w');
 
             // BOM para que Excel lea bien UTF-8
@@ -143,9 +143,9 @@ class ReportController extends Controller
                 'Creado',
             ]);
 
-            foreach ($procesos as $p) {
+            foreach ($licitaciones as $p) {
                 fputcsv($output, [
-                    $p->codigo_proceso,
+                    $p->codigo_licitacion,
                     $p->objeto,
                     $p->actividad,
                     $p->descripcion,

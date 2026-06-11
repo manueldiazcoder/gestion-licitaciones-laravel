@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OAuthController;
-use App\Http\Controllers\ProcesoController;
+use App\Http\Controllers\LicitacionController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ResetPasswordController;
@@ -52,11 +52,11 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    // Exportación CSV de procesos (antes del resource para evitar conflictos)
-    Route::get('/procesos/exportar-csv', [ProcesoController::class, 'exportCsv'])->name('procesos.export');
+    // Exportación CSV de licitaciones (antes del resource para evitar conflictos)
+    Route::get('/licitaciones/exportar-csv', [LicitacionController::class, 'exportCsv'])->name('licitaciones.export');
 
-    // CRUD de Procesos — el middleware de roles está en el constructor del controller
-    Route::resource('procesos', ProcesoController::class);
+    // CRUD de Licitaciones — el middleware de roles está en el constructor del controller
+    Route::resource('licitaciones', LicitacionController::class);
 
     // Reportes
     Route::prefix('reportes')->name('reportes.')->group(function () {
