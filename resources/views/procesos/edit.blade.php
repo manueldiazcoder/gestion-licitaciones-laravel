@@ -3,12 +3,12 @@
 @section('title', "Editar Proceso #{$proceso->codigo_proceso}")
 
 @section('content')
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="mb-0 fw-bold" style="color: var(--color-primary);">
         <i class="bi bi-pencil me-2"></i>Editar Proceso #{{ $proceso->codigo_proceso }}
     </h4>
-    <a href="{{ route('procesos.show', $proceso) }}" class="btn btn-outline-secondary btn-sm">
-        <i class="bi bi-arrow-left me-1"></i>Volver
+    <a href="{{ route('procesos.index') }}" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left me-1"></i> Volver
     </a>
 </div>
 
@@ -24,55 +24,45 @@
     </div>
 @endif
 
-<div class="card shadow-sm border">
-    <div class="card-body p-4">
-        <form action="{{ route('procesos.update', $proceso) }}" method="POST">
-            @csrf
-            @method('PUT')
+@if ($responsables->isEmpty())
+    <div class="alert alert-warning d-flex align-items-center gap-2" role="alert">
+        <i class="bi bi-exclamation-triangle"></i>
+        <span>
+            <strong>No hay responsables registrados.</strong>
+            Para editar un proceso debe haber al menos un responsable disponible.
+        </span>
+    </div>
+@endif
 
-            {{-- Información básica --}}
-            <h5 class="mb-3 fw-bold" style="color: var(--color-primary);">
-                <i class="bi bi-info-circle me-2"></i>Información Básica
-            </h5>
-            <div class="contenedorInformacion mb-4">
-                <div>
-                    <label for="objeto" class="form-label form-label-sm">Objeto <span class="text-danger">*</span></label>
-                    <input type="text" name="objeto" id="objeto"
-                           class="form-control @error('objeto') is-invalid @enderror"
-                           value="{{ old('objeto', $proceso->objeto) }}" required maxlength="500">
-                </div>
-                <div>
-                    <label for="actividad" class="form-label form-label-sm">Actividad</label>
-                    <input type="text" name="actividad" id="actividad"
-                           class="form-control @error('actividad') is-invalid @enderror"
-                           value="{{ old('actividad', $proceso->actividad) }}" maxlength="255">
-                </div>
-                <div class="full-width">
-                    <label for="descripcion" class="form-label form-label-sm">Descripción / Alcance <span class="text-danger">*</span></label>
-                    <textarea name="descripcion" id="descripcion" rows="4"
-                              class="form-control @error('descripcion') is-invalid @enderror"
-                              required maxlength="2000">{{ old('descripcion', $proceso->descripcion) }}</textarea>
-                </div>
-            </div>
+<form action="{{ route('procesos.update', $proceso) }}" method="POST">
+    @csrf
+    @method('PUT')
 
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            {{-- DATOS DEL PROCESO --}}
+            <h5 class="text-secondary mb-3">Datos del proceso</h5>
             <hr class="delimitadorSuperior">
 
-            {{-- Presupuesto --}}
-            <h5 class="mb-3 mt-3 fw-bold" style="color: var(--color-primary);">
-                <i class="bi bi-cash me-2"></i>Presupuesto
-            </h5>
-            <div class="row g-3 mb-4">
-                <div class="col-md-6">
-                    <label for="presupuesto" class="form-label form-label-sm">Monto <span class="text-danger">*</span></label>
-                    <div class="input-group">
-                        <span class="input-group-text">$</span>
-                        <input type="number" name="presupuesto" id="presupuesto"
-                               class="form-control @error('presupuesto') is-invalid @enderror"
-                               value="{{ old('presupuesto', $proceso->presupuesto) }}" required min="0">
-                    </div>
+            <div class="contenedorInformacion">
+                <div class="objeto">
+                    <label for="objeto" class="form-label fw-semibold">Objeto <span class="text-danger">*</span></label>
+                    <input type="text" name="objeto" id="objeto"
+                           class="form-control @error('objeto') is-invalid @enderror"
+                           value="{{ old('objeto', $proceso->objeto) }}" required maxlength="500"
+                           placeholder="Ej: Adquisición de equipos de cómputo">
                 </div>
-                <div class="col-md-6">
-                    <label for="moneda" class="form-label form-label-sm">Moneda <span class="text-danger">*</span></label>
+
+                <div class="descripcion full-width">
+                    <label for="descripcion" class="form-label fw-semibold">Descripción / Alcance</label>
+                    <textarea name="descripcion" id="descripcion" rows="4"
+                              class="form-control @error('descripcion') is-invalid @enderror"
+                              maxlength="2000" placeholder="Describa el alcance del proceso">{{ old('descripcion', $proceso->descripcion) }}</textarea>
+                </div>
+
+                <div class="moneda">
+                    <label for="moneda" class="form-label fw-semibold">Moneda</label>
                     <select name="moneda" id="moneda"
                             class="form-select @error('moneda') is-invalid @enderror" required>
                         <option value="COP" @selected(old('moneda', $proceso->moneda) === 'COP')>COP (Peso colombiano)</option>
@@ -80,78 +70,89 @@
                         <option value="EUR" @selected(old('moneda', $proceso->moneda) === 'EUR')>EUR (Euro)</option>
                     </select>
                 </div>
-            </div>
 
-            <hr class="delimitadorSuperior">
+                <div class="presupuesto">
+                    <label for="presupuesto" class="form-label fw-semibold">Presupuesto <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input type="number" name="presupuesto" id="presupuesto"
+                               class="form-control @error('presupuesto') is-invalid @enderror"
+                               value="{{ old('presupuesto', $proceso->presupuesto) }}" required min="0" step="1" placeholder="0">
+                    </div>
+                </div>
 
-            {{-- Estado y Responsable --}}
-            <h5 class="mb-3 mt-3 fw-bold" style="color: var(--color-primary);">
-                <i class="bi bi-info-circle me-2"></i>Estado y Responsable
-            </h5>
-            <div class="row g-3 mb-4">
-                <div class="col-md-6">
-                    <label for="estado" class="form-label form-label-sm">Estado</label>
+                <div class="estado">
+                    <label for="estado" class="form-label fw-semibold">Estado</label>
                     <select name="estado" id="estado" class="form-select">
                         @foreach (\App\Models\Proceso::ESTADOS as $est)
-                            <option value="{{ $est }}" @selected(old('estado', $proceso->estado ?? 'Borrador') === $est)>{{ $est }}</option>
+                            <option value="{{ $est }}" @selected(old('estado', $proceso->estado) === $est)>{{ $est }}</option>
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-6">
-                    <label for="responsable_id" class="form-label form-label-sm">Responsable</label>
-                    <select name="responsable_id" id="responsable_id" class="form-select">
-                        <option value="">-- Sin asignar --</option>
+
+                <div class="responsable">
+                    <label for="responsable_id" class="form-label fw-semibold">Responsable <span class="text-danger">*</span></label>
+                    <select name="responsable_id" id="responsable_id" class="form-select" required {{ $responsables->isEmpty() ? 'disabled' : '' }}>
+                        <option value="">— Sin asignar —</option>
                         @foreach ($responsables as $r)
                             <option value="{{ $r->id }}" @selected(old('responsable_id', $proceso->responsable_id) == $r->id)>
                                 {{ $r->nombre_completo }}
                             </option>
                         @endforeach
                     </select>
+                    @if ($responsables->isEmpty())
+                        <div class="form-text text-danger">No hay responsables disponibles. Registre uno primero.</div>
+                    @endif
                 </div>
             </div>
 
+            {{-- CRONOGRAMA --}}
+            <hr class="mt-4">
+            <h5 class="text-secondary mb-3">Cronograma</h5>
             <hr class="delimitadorSuperior">
 
-            {{-- Cronograma --}}
-            <h5 class="mb-3 mt-3 fw-bold" style="color: var(--color-primary);">
-                <i class="bi bi-calendar-event me-2"></i>Cronograma
-            </h5>
-            <div class="contenedorCronograma mb-4">
-                <div>
-                    <label for="fecha_inicio" class="form-label form-label-sm">Fecha inicio <span class="text-danger">*</span></label>
+            <div class="row g-3">
+                <div class="col-md-3 col-sm-6">
+                    <label for="fecha_inicio" class="form-label fw-semibold">Fecha inicio <span class="text-danger">*</span></label>
                     <input type="date" name="fecha_inicio" id="fecha_inicio"
                            class="form-control @error('fecha_inicio') is-invalid @enderror"
                            value="{{ old('fecha_inicio', $proceso->fecha_inicio->format('Y-m-d')) }}" required>
                 </div>
-                <div>
-                    <label for="hora_inicio" class="form-label form-label-sm">Hora inicio <span class="text-danger">*</span></label>
+
+                <div class="col-md-3 col-sm-6">
+                    <label for="hora_inicio" class="form-label fw-semibold">Hora inicio <span class="text-danger">*</span></label>
                     <input type="time" name="hora_inicio" id="hora_inicio"
                            class="form-control @error('hora_inicio') is-invalid @enderror"
                            value="{{ old('hora_inicio', $proceso->hora_inicio) }}" required>
                 </div>
-                <div>
-                    <label for="fecha_cierre" class="form-label form-label-sm">Fecha cierre <span class="text-danger">*</span></label>
+
+                <div class="col-md-3 col-sm-6">
+                    <label for="fecha_cierre" class="form-label fw-semibold">Fecha cierre <span class="text-danger">*</span></label>
                     <input type="date" name="fecha_cierre" id="fecha_cierre"
                            class="form-control @error('fecha_cierre') is-invalid @enderror"
                            value="{{ old('fecha_cierre', $proceso->fecha_cierre->format('Y-m-d')) }}" required>
                 </div>
-                <div>
-                    <label for="hora_cierre" class="form-label form-label-sm">Hora cierre <span class="text-danger">*</span></label>
+
+                <div class="col-md-3 col-sm-6">
+                    <label for="hora_cierre" class="form-label fw-semibold">Hora cierre <span class="text-danger">*</span></label>
                     <input type="time" name="hora_cierre" id="hora_cierre"
                            class="form-control @error('hora_cierre') is-invalid @enderror"
                            value="{{ old('hora_cierre', $proceso->hora_cierre) }}" required>
                 </div>
             </div>
 
-            <hr class="delimitadorSuperior">
-
-            <div class="d-flex justify-content-end gap-2 mt-3">
-                <a href="{{ route('procesos.show', $proceso) }}" class="btn btn-outline-secondary">Cancelar</a>
-                <button type="submit" class="btn btn-warning">
-                    <i class="bi bi-save me-1"></i>Actualizar Proceso
+            {{-- BOTONES --}}
+            <hr class="mt-4">
+            <div class="d-flex justify-content-end gap-2">
+                <a href="{{ route('procesos.index') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-x-lg me-1"></i> Cancelar
+                </a>
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-check-lg me-1"></i> Guardar Cambios
                 </button>
             </div>
-        </form>
+
+        </div>
     </div>
-</div>
+</form>
 @endsection
