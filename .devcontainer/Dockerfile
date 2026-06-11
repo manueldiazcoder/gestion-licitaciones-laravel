@@ -57,3 +57,14 @@ RUN mkdir -p storage/logs storage/framework/sessions storage/framework/views \
 # PERMISOS POR DEFECTO DEL WWW-DATA
 # ============================================================
 RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
+
+# ============================================================
+# ENTRYPOINT PERSONALIZADO
+# Arregla permisos en storage/ y bootstrap/cache/ en cada inicio
+# del container (no solo en build), indispensable porque el
+# volumen monta los directorios del host pisando los permisos.
+# ============================================================
+COPY .devcontainer/entrypoint.sh /usr/local/bin/custom-entrypoint
+RUN chmod +x /usr/local/bin/custom-entrypoint
+ENTRYPOINT ["custom-entrypoint"]
+CMD ["apache2-foreground"]

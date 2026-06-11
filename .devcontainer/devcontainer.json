@@ -14,7 +14,8 @@
       "onAutoForward": "silent"
     }
   },
-  "postCreateCommand": "composer install --no-interaction --no-progress --prefer-dist --ignore-platform-reqs 2>/dev/null; npm install 2>/dev/null; php artisan key:generate 2>/dev/null; php artisan storage:link 2>/dev/null; php artisan migrate --seed --force 2>/dev/null; echo '✅ Entorno listo! Abrí http://localhost:8080 en tu navegador'",
+  "postCreateCommand": "chown -R www-data:www-data storage bootstrap/cache 2>/dev/null; chmod -R 775 storage bootstrap/cache 2>/dev/null; cp -n .env.example .env 2>/dev/null; composer install --no-interaction --no-progress --prefer-dist --ignore-platform-reqs 2>/dev/null; npm install 2>/dev/null; php artisan key:generate 2>/dev/null; php artisan storage:link 2>/dev/null; php artisan migrate --seed --force 2>/dev/null; echo '✅ Entorno listo! Abrí http://localhost:8080 en tu navegador'",
+  "postStartCommand": "chown -R www-data:www-data storage bootstrap/cache 2>/dev/null; chmod -R 775 storage bootstrap/cache 2>/dev/null; echo '✅ Permisos corregidos'",
   "customizations": {
     "vscode": {
       "extensions": [
