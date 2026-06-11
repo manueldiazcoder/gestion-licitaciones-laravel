@@ -108,11 +108,16 @@ class Proceso extends Model
 
     public function scopeByDateRange($query, ?string $desde, ?string $hasta)
     {
-        if ($desde) {
-            $query->whereDate('fecha_inicio', '>=', $desde);
-        }
-        if ($hasta) {
-            $query->whereDate('fecha_cierre', '<=', $hasta);
+        if ($desde && $hasta) {
+            // Overlap: procesos cuyo rango [fecha_inicio, fecha_cierre] se superponga con [desde, hasta]
+            $query->whereDate('fecha_inicio', '<=', $hasta)
+                  ->whereDate('fecha_cierre', '>=', $desde);
+        } elseif ($desde) {
+            // Solo desde: procesos que inicien o estén vigentes después de esa fecha
+            $query->whereDate('fecha_cierre', '>=', $desde);
+        } elseif ($hasta) {
+            // Solo hasta: procesos que cierren antes o en esa fecha
+            $query->whereDate('fecha_inicio', '<=', $hasta);
         }
     }
 
