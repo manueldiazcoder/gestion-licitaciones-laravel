@@ -35,7 +35,7 @@ class ProcesoController extends Controller
 
     public function create()
     {
-        $responsables = Responsable::orderBy('nombre')->get();
+        $responsables = Responsable::orderBy('nombre_completo')->get();
         return view('procesos.create', compact('responsables'));
     }
 
@@ -68,7 +68,7 @@ class ProcesoController extends Controller
 
     public function edit(Proceso $proceso)
     {
-        $responsables = Responsable::orderBy('nombre')->get();
+        $responsables = Responsable::orderBy('nombre_completo')->get();
         return view('procesos.edit', compact('proceso', 'responsables'));
     }
 
