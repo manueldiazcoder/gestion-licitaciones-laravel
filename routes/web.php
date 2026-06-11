@@ -24,26 +24,7 @@ use App\Http\Controllers\ResetPasswordController;
 // ─────────────────────────────────────────
 
 Route::get('/', function () {
-    // Valores por defecto por si la DB no tiene datos o tablas
-    $data = [
-        'totalProcesos' => 0,
-        'publicados'    => 0,
-        'enEvaluacion'  => 0,
-        'adjudicados'   => 0,
-    ];
-
-    try {
-        $data = [
-            'totalProcesos' => \App\Models\Proceso::count(),
-            'publicados'    => \App\Models\Proceso::where('estado', 'Publicado')->count(),
-            'enEvaluacion'  => \App\Models\Proceso::where('estado', 'En evaluación')->count(),
-            'adjudicados'   => \App\Models\Proceso::where('estado', 'Adjudicado')->count(),
-        ];
-    } catch (\Throwable $e) {
-        // DB no disponible o sin migraciones — mostramos 0s
-    }
-
-    return view('home', $data);
+    return view('home');
 })->name('home');
 
 Route::middleware('guest')->group(function () {

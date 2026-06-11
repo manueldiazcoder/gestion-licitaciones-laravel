@@ -23,6 +23,9 @@ class ReportController extends Controller
     {
         // Valores por defecto seguros
         $totalProcesos      = 0;
+        $publicados         = 0;
+        $enEvaluacion       = 0;
+        $adjudicados        = 0;
         $presupuestoTotal   = 0;
         $promedioPresupuesto = 0;
         $porMoneda          = collect();
@@ -33,6 +36,9 @@ class ReportController extends Controller
 
         try {
             $totalProcesos   = Proceso::count();
+            $publicados      = Proceso::where('estado', 'Publicado')->count();
+            $enEvaluacion    = Proceso::where('estado', 'En evaluación')->count();
+            $adjudicados     = Proceso::where('estado', 'Adjudicado')->count();
             $presupuestoTotal = Proceso::sum('presupuesto');
             $promedioPresupuesto = $totalProcesos > 0
                 ? round(Proceso::avg('presupuesto'), 2)
@@ -78,6 +84,9 @@ class ReportController extends Controller
 
         return view('reportes.index', compact(
             'totalProcesos',
+            'publicados',
+            'enEvaluacion',
+            'adjudicados',
             'presupuestoTotal',
             'promedioPresupuesto',
             'porMoneda',

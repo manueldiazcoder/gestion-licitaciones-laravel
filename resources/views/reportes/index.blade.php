@@ -65,6 +65,23 @@
                 <div class="text-primary display-6 mb-2"><i class="bi bi-folder"></i></div>
                 <h5 class="card-title">Total procesos</h5>
                 <p class="display-5 fw-bold text-primary mb-0">{{ number_format($totalProcesos) }}</p>
+
+                {{-- Desglose por estado --}}
+                <hr class="my-2">
+                <div class="d-flex flex-column gap-1 small text-start">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span><span class="d-inline-block rounded-circle me-1" style="width: 8px; height: 8px; background: #276749;"></span>Publicados</span>
+                        <span class="fw-semibold">{{ number_format($publicados) }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span><span class="d-inline-block rounded-circle me-1" style="width: 8px; height: 8px; background: #b7791f;"></span>En evaluación</span>
+                        <span class="fw-semibold">{{ number_format($enEvaluacion) }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span><span class="d-inline-block rounded-circle me-1" style="width: 8px; height: 8px; background: #9b2c2c;"></span>Adjudicados</span>
+                        <span class="fw-semibold">{{ number_format($adjudicados) }}</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -15,27 +15,7 @@
     </p>
   </div>
 
-  {{-- Métricas rápidas --}}
-  <div class="dashboard-grid mb-4">
-    <div class="metric-card" style="background: linear-gradient(135deg, #1a365d, #2b6cb0);">
-      <h6>Total Procesos</h6>
-      <p class="metric-value">{{ $totalProcesos ?? 0 }}</p>
-    </div>
-    <div class="metric-card" style="background: linear-gradient(135deg, #276749, #38a169);">
-      <h6>Publicados</h6>
-      <p class="metric-value">{{ $publicados ?? 0 }}</p>
-    </div>
-    <div class="metric-card" style="background: linear-gradient(135deg, #744210, #d69e2e);">
-      <h6>En Evaluación</h6>
-      <p class="metric-value">{{ $enEvaluacion ?? 0 }}</p>
-    </div>
-    <div class="metric-card" style="background: linear-gradient(135deg, #9b2c2c, #e53e3e);">
-      <h6>Adjudicados</h6>
-      <p class="metric-value">{{ $adjudicados ?? 0 }}</p>
-    </div>
-  </div>
-
-  {{-- Accesos directos (como en el original) --}}
+  {{-- Accesos directos --}}
   <hr class="delimitadorSuperior">
 
   <div class="dashboard-grid">
