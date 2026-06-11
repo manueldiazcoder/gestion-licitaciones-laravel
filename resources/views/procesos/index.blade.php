@@ -3,7 +3,7 @@
 @section('title', 'Consultar Procesos')
 
 @section('content')
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
     <h4 class="mb-0 fw-bold" style="color: var(--color-primary);">
         <i class="bi bi-search me-2"></i>Consultar Procesos
     </h4>
@@ -26,7 +26,8 @@
             <i class="bi bi-funnel me-1"></i>Buscar procesos
         </h6>
         <div class="row g-3">
-            <div class="col-md-2">
+            {{-- Fila 1: todos los inputs de filtro --}}
+            <div class="col-md-1">
                 <label class="form-label fw-semibold small">ID Proceso</label>
                 <input type="number" name="codigo" class="form-control form-control-sm"
                        placeholder="Número" value="{{ request('codigo') }}" min="1">
@@ -56,24 +57,25 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-md-1">
+            <div class="col-md-2">
                 <label class="form-label fw-semibold small">Desde</label>
                 <input type="date" name="desde" class="form-control form-control-sm"
                        value="{{ request('desde') }}">
             </div>
-            <div class="col-md-1">
+            <div class="col-md-2">
                 <label class="form-label fw-semibold small">Hasta</label>
                 <input type="date" name="hasta" class="form-control form-control-sm"
                        value="{{ request('hasta') }}">
             </div>
-            <div class="col-md-1 d-flex align-items-end gap-1">
-                <button type="submit" class="btn btn-primary btn-sm flex-fill">
-                    <i class="bi bi-search"></i>
-                </button>
-                <a href="{{ route('procesos.index') }}" class="btn btn-outline-secondary btn-sm" title="Limpiar filtros">
-                    <i class="bi bi-x-circle"></i>
-                </a>
-            </div>
+        </div>
+        {{-- Fila 2: botones abajo a la derecha --}}
+        <div class="d-flex justify-content-end gap-2 mt-3">
+            <a href="{{ route('procesos.index') }}" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-x-circle me-1"></i>Limpiar
+            </a>
+            <button type="submit" class="btn btn-primary btn-sm">
+                <i class="bi bi-search me-1"></i>Buscar
+            </button>
         </div>
     </div>
 </form>
