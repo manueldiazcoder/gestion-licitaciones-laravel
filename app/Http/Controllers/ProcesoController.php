@@ -20,13 +20,17 @@ class ProcesoController extends Controller
     {
         $procesos = Proceso::query()
             ->search($request->query('search'))
-            ->byMoneda($request->query('moneda'))
+            ->byId($request->query('codigo'))
+            ->byResponsable($request->query('responsable_id'))
+            ->byEstado($request->query('estado'))
             ->byDateRange($request->query('desde'), $request->query('hasta'))
             ->orderBy('created_at', 'desc')
             ->paginate(10)
             ->withQueryString();
 
-        return view('procesos.index', compact('procesos'));
+        $responsables = Responsable::orderBy('nombre_completo')->get(['codigo_responsable', 'nombre_completo']);
+
+        return view('procesos.index', compact('procesos', 'responsables'));
     }
 
     public function create()
@@ -80,6 +84,49 @@ class ProcesoController extends Controller
         return redirect()
             ->route('procesos.show', $proceso)
             ->with('success', 'Proceso actualizado correctamente.');
+    }
+
+    public function exportCsv(Request $request)
+    {
+        $procesos = Proceso::query()
+            ->search($request->query('search'))
+            ->byId($request->query('codigo'))
+            ->byResponsable($request->query('responsable_id'))
+            ->byEstado($request->query('estado'))
+            ->byDateRange($request->query('desde'), $request->query('hasta'))
+            ->orderBy('codigo_proceso')
+            ->get();
+
+        $filename = 'procesos_' . now()->format('Y-m-d_His') . '.csv';
+
+        return response()->streamDownload(function () use ($procesos) {
+            $output = fopen('php://output', 'w');
+            fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF)); // BOM Excel
+
+            fputcsv($output, [
+                'ID', 'Objeto', 'Descripción', 'Estado',
+                'Fecha Inicio', 'Hora Inicio', 'Fecha Cierre', 'Hora Cierre',
+                'Presupuesto', 'Moneda', 'Responsable',
+            ]);
+
+            foreach ($procesos as $p) {
+                fputcsv($output, [
+                    $p->codigo_proceso,
+                    $p->objeto,
+                    $p->descripcion,
+                    $p->estado ?: '—',
+                    $p->fecha_inicio?->format('Y-m-d'),
+                    $p->hora_inicio,
+                    $p->fecha_cierre?->format('Y-m-d'),
+                    $p->hora_cierre,
+                    $p->presupuesto,
+                    $p->moneda,
+                    $p->responsable?->nombre_completo ?: '—',
+                ]);
+            }
+
+            fclose($output);
+        }, $filename, ['Content-Type' => 'text/csv; charset=UTF-8']);
     }
 
     public function destroy(Proceso $proceso)

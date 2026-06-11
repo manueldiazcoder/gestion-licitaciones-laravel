@@ -122,4 +122,18 @@ class Proceso extends Model
             $query->where('estado', $estado);
         }
     }
+
+    public function scopeById($query, ?string $id)
+    {
+        if ($id) {
+            $query->where('codigo_proceso', $id);
+        }
+    }
+
+    public function scopeByResponsable($query, ?string $responsableId)
+    {
+        if ($responsableId) {
+            $query->where('responsable_id', $responsableId);
+        }
+    }
 }

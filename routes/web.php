@@ -52,6 +52,9 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+    // Exportación CSV de procesos (antes del resource para evitar conflictos)
+    Route::get('/procesos/exportar-csv', [ProcesoController::class, 'exportCsv'])->name('procesos.export');
+
     // CRUD de Procesos — el middleware de roles está en el constructor del controller
     Route::resource('procesos', ProcesoController::class);
 

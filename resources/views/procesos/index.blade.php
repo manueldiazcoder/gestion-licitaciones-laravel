@@ -7,43 +7,74 @@
     <h4 class="mb-0 fw-bold" style="color: var(--color-primary);">
         <i class="bi bi-search me-2"></i>Consultar Procesos
     </h4>
-    @if (Auth::user()?->esAdmin())
-        <a href="{{ route('procesos.create') }}" class="btn btn-success btn-sm">
-            <i class="bi bi-plus-circle me-1"></i>Nuevo Proceso
+    <div class="d-flex gap-2">
+        <a href="{{ route('procesos.export', request()->query()) }}" class="btn btn-outline-success btn-sm">
+            <i class="bi bi-file-earmark-spreadsheet me-1"></i>Exportar CSV
         </a>
-    @endif
+        @if (Auth::user()?->esAdmin())
+            <a href="{{ route('procesos.create') }}" class="btn btn-success btn-sm">
+                <i class="bi bi-plus-circle me-1"></i>Nuevo Proceso
+            </a>
+        @endif
+    </div>
 </div>
 
 {{-- Filtros --}}
-<form method="GET" action="{{ route('procesos.index') }}" class="row g-2 mb-4 p-3 bg-white rounded shadow-sm border">
-    <div class="col-md-4">
-        <input type="text" name="search" class="form-control form-control-sm"
-               placeholder="Buscar por objeto, descripción..."
-               value="{{ request('search') }}">
-    </div>
-    <div class="col-md-2">
-        <select name="moneda" class="form-select form-select-sm">
-            <option value="">Todas las monedas</option>
-            <option value="COP" @selected(request('moneda') === 'COP')>COP</option>
-            <option value="USD" @selected(request('moneda') === 'USD')>USD</option>
-            <option value="EUR" @selected(request('moneda') === 'EUR')>EUR</option>
-        </select>
-    </div>
-    <div class="col-md-2">
-        <input type="date" name="desde" class="form-control form-control-sm"
-               value="{{ request('desde') }}" placeholder="Desde">
-    </div>
-    <div class="col-md-2">
-        <input type="date" name="hasta" class="form-control form-control-sm"
-               value="{{ request('hasta') }}" placeholder="Hasta">
-    </div>
-    <div class="col-md-2 d-flex gap-1">
-        <button type="submit" class="btn btn-primary btn-sm flex-fill">
-            <i class="bi bi-funnel"></i> Filtrar
-        </button>
-        <a href="{{ route('procesos.index') }}" class="btn btn-outline-secondary btn-sm">
-            <i class="bi bi-x-circle"></i>
-        </a>
+<form method="GET" action="{{ route('procesos.index') }}" class="card shadow-sm border mb-4">
+    <div class="card-body">
+        <h6 class="card-title text-secondary mb-3">
+            <i class="bi bi-funnel me-1"></i>Buscar procesos
+        </h6>
+        <div class="row g-3">
+            <div class="col-md-2">
+                <label class="form-label fw-semibold small">ID Proceso</label>
+                <input type="number" name="codigo" class="form-control form-control-sm"
+                       placeholder="Número" value="{{ request('codigo') }}" min="1">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label fw-semibold small">Objeto / Descripción</label>
+                <input type="text" name="search" class="form-control form-control-sm"
+                       placeholder="Palabra clave" value="{{ request('search') }}">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label fw-semibold small">Responsable</label>
+                <select name="responsable_id" class="form-select form-select-sm">
+                    <option value="">Todos</option>
+                    @foreach ($responsables as $r)
+                        <option value="{{ $r->codigo_responsable }}" @selected(request('responsable_id') == $r->codigo_responsable)>
+                            {{ $r->nombre_completo }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label fw-semibold small">Estado</label>
+                <select name="estado" class="form-select form-select-sm">
+                    <option value="">Todos</option>
+                    @foreach (\App\Models\Proceso::ESTADOS as $est)
+                        <option value="{{ $est }}" @selected(request('estado') === $est)>{{ $est }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-1">
+                <label class="form-label fw-semibold small">Desde</label>
+                <input type="date" name="desde" class="form-control form-control-sm"
+                       value="{{ request('desde') }}">
+            </div>
+            <div class="col-md-1">
+                <label class="form-label fw-semibold small">Hasta</label>
+                <input type="date" name="hasta" class="form-control form-control-sm"
+                       value="{{ request('hasta') }}">
+            </div>
+            <div class="col-md-1 d-flex align-items-end gap-1">
+                <button type="submit" class="btn btn-primary btn-sm flex-fill">
+                    <i class="bi bi-search"></i>
+                </button>
+                <a href="{{ route('procesos.index') }}" class="btn btn-outline-secondary btn-sm" title="Limpiar filtros">
+                    <i class="bi bi-x-circle"></i>
+                </a>
+            </div>
+        </div>
     </div>
 </form>
 
@@ -54,8 +85,8 @@
             <tr>
                 <th>#</th>
                 <th>Objeto</th>
-                <th>Presupuesto</th>
-                <th>Moneda</th>
+                <th>Estado</th>
+                <th>Responsable</th>
                 <th>Inicio</th>
                 <th>Cierre</th>
                 <th class="text-center">Acciones</th>
@@ -73,19 +104,19 @@
                             <br><small class="text-muted">{{ Str::limit($proceso->actividad, 40) }}</small>
                         @endif
                     </td>
-                    <td class="text-end fw-semibold">{{ $proceso->presupuesto_formateado }}</td>
-                    <td>{{ $proceso->moneda }}</td>
                     <td>
-                        <span class="small">
-                            <i class="bi bi-calendar"></i> {{ $proceso->fecha_inicio->format('d/m/Y') }}
-                            <br><i class="bi bi-clock"></i> {{ $proceso->hora_inicio }}
+                        <span class="badge {{ \App\Models\Proceso::COLORES_ESTADO[$proceso->estado] ?? 'bg-secondary' }}">
+                            {{ $proceso->estado }}
                         </span>
                     </td>
-                    <td>
-                        <span class="small">
-                            <i class="bi bi-calendar"></i> {{ $proceso->fecha_cierre->format('d/m/Y') }}
-                            <br><i class="bi bi-clock"></i> {{ $proceso->hora_cierre }}
-                        </span>
+                    <td>{{ $proceso->responsable?->nombre_completo ?: '—' }}</td>
+                    <td class="small">
+                        <i class="bi bi-calendar"></i> {{ $proceso->fecha_inicio->format('d/m/Y') }}
+                        <br><i class="bi bi-clock"></i> {{ $proceso->hora_inicio }}
+                    </td>
+                    <td class="small">
+                        <i class="bi bi-calendar"></i> {{ $proceso->fecha_cierre->format('d/m/Y') }}
+                        <br><i class="bi bi-clock"></i> {{ $proceso->hora_cierre }}
                     </td>
                     <td class="text-center">
                         <div class="d-flex justify-content-center gap-1">
