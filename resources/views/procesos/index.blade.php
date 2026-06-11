@@ -28,7 +28,7 @@
         <div class="row g-3">
             {{-- Fila 1: todos los inputs de filtro --}}
             <div class="col-md-1">
-                <label class="form-label fw-semibold small">ID Proceso</label>
+                <label class="form-label fw-semibold small"># ID</label>
                 <input type="number" name="codigo" class="form-control form-control-sm"
                        placeholder="Número" value="{{ request('codigo') }}" min="1">
             </div>
