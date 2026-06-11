@@ -84,7 +84,7 @@
                 <div class="estado">
                     <label for="estado" class="form-label fw-semibold">Estado</label>
                     <select name="estado" id="estado" class="form-select">
-                        @foreach (\App\Models\Proceso::ESTADOS as $est)
+                        @foreach (\App\Models\Licitacion::ESTADOS as $est)
                             <option value="{{ $est }}" @selected(old('estado', $licitacion->estado) === $est)>{{ $est }}</option>
                         @endforeach
                     </select>

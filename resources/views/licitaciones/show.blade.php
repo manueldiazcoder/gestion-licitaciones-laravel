@@ -49,7 +49,7 @@
                 <label class="text-muted small text-uppercase fw-semibold">Estado</label>
                 <p class="mb-0">
                     @php
-                        $color = \App\Models\Proceso::COLORES_ESTADO[$licitacion->estado] ?? 'bg-secondary';
+                        $color = \App\Models\Licitacion::COLORES_ESTADO[$licitacion->estado] ?? 'bg-secondary';
                     @endphp
                     <span class="badge {{ $color }}">{{ $licitacion->estado ?? 'Borrador' }}</span>
                 </p>

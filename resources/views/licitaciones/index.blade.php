@@ -52,7 +52,7 @@
                 <label class="form-label fw-semibold small">Estado</label>
                 <select name="estado" class="form-select form-select-sm">
                     <option value="">Todos</option>
-                    @foreach (\App\Models\Proceso::ESTADOS as $est)
+                    @foreach (\App\Models\Licitacion::ESTADOS as $est)
                         <option value="{{ $est }}" @selected(request('estado') === $est)>{{ $est }}</option>
                     @endforeach
                 </select>
@@ -107,7 +107,7 @@
                         @endif
                     </td>
                     <td>
-                        <span class="badge {{ \App\Models\Proceso::COLORES_ESTADO[$licitacion->estado] ?? 'bg-secondary' }}">
+                        <span class="badge {{ \App\Models\Licitacion::COLORES_ESTADO[$licitacion->estado] ?? 'bg-secondary' }}">
                             {{ $licitacion->estado }}
                         </span>
                     </td>
