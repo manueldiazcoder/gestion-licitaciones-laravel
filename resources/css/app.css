@@ -9,6 +9,7 @@
   --color-primary-light: #2b6cb0;
   --color-secondary:     #4a5568;
   --color-success:       #276749;
+  --color-success-dark:  #1c5133;
   --color-warning:       #b7791f;
   --color-danger:        #9b2c2c;
   --color-bg:            #f7fafc;
@@ -21,6 +22,44 @@
   --shadow-sm:           0 1px 2px rgba(0,0,0,.05);
   --shadow-md:           0 4px 6px rgba(0,0,0,.07);
   --font-family:         Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  /* ── Override Bootstrap 5 color utilities ──
+     bg-primary, btn-primary, text-primary, border-primary, etc.
+     pasan a usar la paleta de la app automáticamente. */
+  --bs-primary:     var(--color-primary);
+  --bs-primary-rgb: 26, 54, 93;
+  --bs-success:     var(--color-success);
+  --bs-success-rgb: 39, 103, 73;
+}
+
+/* ── Override Bootstrap button colors ───────────────
+     Bootstrap 5.3 usa scoped CSS vars para botones.
+     Necesitamos overridear --bs-btn-bg y --bs-btn-hover-bg. */
+.btn-primary {
+  --bs-btn-bg: var(--color-primary);
+  --bs-btn-border-color: var(--color-primary);
+  --bs-btn-hover-bg: var(--color-primary-dark);
+  --bs-btn-hover-border-color: var(--color-primary-dark);
+  --bs-btn-active-bg: var(--color-primary-dark);
+  --bs-btn-active-border-color: var(--color-primary-dark);
+}
+
+.btn-success {
+  --bs-btn-bg: var(--color-success);
+  --bs-btn-border-color: var(--color-success);
+  --bs-btn-hover-bg: var(--color-success-dark);
+  --bs-btn-hover-border-color: var(--color-success-dark);
+  --bs-btn-active-bg: var(--color-success-dark);
+  --bs-btn-active-border-color: var(--color-success-dark);
+}
+
+.btn-outline-success {
+  --bs-btn-color: var(--color-success);
+  --bs-btn-border-color: var(--color-success);
+  --bs-btn-hover-bg: var(--color-success);
+  --bs-btn-hover-border-color: var(--color-success);
+  --bs-btn-active-bg: var(--color-success-dark);
+  --bs-btn-active-border-color: var(--color-success-dark);
 }
 
 /* ── Reset ───────────────────────────────────────── */
