@@ -41,7 +41,7 @@
                 <select name="responsable_id" class="form-select form-select-sm">
                     <option value="">Todos</option>
                     @foreach ($responsables as $r)
-                        <option value="{{ $r->codigo_responsable }}" @selected(request('responsable_id') == $r->codigo_responsable)>
+                        <option value="{{ $r->id }}" @selected(request('responsable_id') == $r->id)>
                             {{ $r->nombre_completo }}
                         </option>
                     @endforeach

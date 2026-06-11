@@ -28,7 +28,7 @@ class ProcesoController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        $responsables = Responsable::orderBy('nombre_completo')->get(['codigo_responsable', 'nombre_completo']);
+        $responsables = Responsable::orderBy('nombre_completo')->get(['id', 'nombre_completo']);
 
         return view('procesos.index', compact('procesos', 'responsables'));
     }
