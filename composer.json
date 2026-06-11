@@ -1,8 +1,8 @@
 {
     "name": "manueldiazcoder/gestion-licitaciones-laravel",
     "type": "project",
-    "description": "Sistema de Gestión de Licitaciones - Laravel 10 + Sail + OAuth 2.0 + Roles",
-    "keywords": ["licitaciones", "procurement", "laravel", "oauth2", "docker", "sail"],
+    "description": "Sistema de Gestión de Licitaciones - Laravel 10 + DevContainer + OAuth 2.0 + Roles",
+    "keywords": ["licitaciones", "procurement", "laravel", "oauth2", "docker", "devcontainer"],
     "license": "MIT",
     "require": {
         "php": "^8.1",
