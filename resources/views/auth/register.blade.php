@@ -6,7 +6,7 @@
 <div class="row justify-content-center mt-5">
     <div class="col-md-6">
         <div class="card shadow">
-            <div class="card-header bg-success text-white text-center">
+            <div class="card-header bg-primary text-white text-center">
                 <h4 class="mb-0">
                     <i class="bi bi-person-plus me-2"></i>Crear Cuenta
                 </h4>
@@ -92,7 +92,7 @@
                     </div>
 
                     <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-success">
+                        <button type="submit" class="btn btn-primary">
                             <i class="bi bi-person-plus me-1"></i>Crear cuenta
                         </button>
                     </div>

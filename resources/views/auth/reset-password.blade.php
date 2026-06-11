@@ -9,7 +9,7 @@
         <div class="card border-0 shadow-sm">
             <div class="card-body p-4">
                 <div class="text-center mb-4">
-                    <i class="bi bi-key fs-1 text-success"></i>
+                    <i class="bi bi-key fs-1 text-primary"></i>
                     <h4 class="mt-2">Restablecer contraseña</h4>
                     <p class="text-muted small">
                         Ingresá tu nueva contraseña.
@@ -62,8 +62,8 @@
                                placeholder="Repetí la contraseña">
                     </div>
 
-                    <button type="submit" class="btn btn-success w-100">
-                        <i class="bi bi-check-circle me-1"></i>Restablecer contraseña
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-check-circle me-1"></i>Restablecer
                     </button>
                 </form>
             </div>
