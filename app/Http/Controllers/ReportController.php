@@ -17,32 +17,54 @@ class ReportController extends Controller
     }
 
     /**
-     * Dashboard de estadísticas.
+     * Dashboard de estadísticas al estilo del proyecto vanilla.
      */
     public function index()
     {
         // Valores por defecto seguros
-        $totalLicitaciones      = 0;
-        $publicados         = 0;
-        $enEvaluacion       = 0;
-        $adjudicados        = 0;
-        $presupuestoTotal   = 0;
-        $promedioPresupuesto = 0;
-        $porMoneda          = collect();
-        $proximosCerrar     = collect();
-        $presupuestoPorMoneda = collect();
-        $totalPorMoneda     = collect();
-        $meses              = collect();
+        $totalLicitaciones    = 0;
+        $publicados           = 0;
+        $enEvaluacion         = 0;
+        $adjudicados          = 0;
+        $presupuestoTotal     = 0;
+        $promedioPresupuesto  = 0;
+        $porMoneda            = collect();
+        $proximosCerrar       = collect();
+        $meses                = collect();
+        $licitacionesPorEstado = collect();
+        $presupuestoPorEstado  = collect();
 
         try {
             $totalLicitaciones   = Licitacion::count();
-            $publicados      = Licitacion::where('estado', 'Publicado')->count();
-            $enEvaluacion    = Licitacion::where('estado', 'En evaluación')->count();
-            $adjudicados     = Licitacion::where('estado', 'Adjudicado')->count();
-            $presupuestoTotal = Licitacion::sum('presupuesto');
+            $publicados          = Licitacion::where('estado', 'Publicado')->count();
+            $enEvaluacion        = Licitacion::where('estado', 'En evaluación')->count();
+            $adjudicados         = Licitacion::where('estado', 'Adjudicado')->count();
+            $presupuestoTotal    = Licitacion::sum('presupuesto');
             $promedioPresupuesto = $totalLicitaciones > 0
                 ? round(Licitacion::avg('presupuesto'), 2)
                 : 0;
+
+            // Licitaciones por estado (para tabla "Licitaciones por Estado")
+            $licitacionesPorEstado = collect();
+            foreach (Licitacion::ESTADOS as $est) {
+                $licitacionesPorEstado->push([
+                    'estado' => $est,
+                    'total'  => Licitacion::where('estado', $est)->count(),
+                ]);
+            }
+
+            // Presupuesto por estado (para tabla "Presupuesto por Estado")
+            $presupuestoPorEstado = collect();
+            foreach (Licitacion::ESTADOS as $est) {
+                $data = Licitacion::where('estado', $est)
+                    ->selectRaw('COUNT(*) as cantidad, COALESCE(SUM(presupuesto), 0) as presupuesto_total')
+                    ->first();
+                $presupuestoPorEstado->push([
+                    'estado'           => $est,
+                    'cantidad'         => $data->cantidad ?? 0,
+                    'presupuesto_total' => $data->presupuesto_total ?? 0,
+                ]);
+            }
 
             // Distribución por moneda
             $porMoneda = Licitacion::selectRaw(
@@ -62,10 +84,7 @@ class ReportController extends Controller
                 ->orderBy('fecha_cierre')
                 ->get();
 
-            // Presupuesto total por moneda para las cards
-            $presupuestoPorMoneda = $porMoneda->pluck('presupuesto', 'moneda');
-            $totalPorMoneda       = $porMoneda->pluck('total', 'moneda');
-
+            // Licitaciones creadas por mes
             $driver = DB::connection()->getDriverName();
             $dateExpr = $driver === 'sqlite'
                 ? "strftime('%Y-%m', created_at)"
@@ -91,9 +110,9 @@ class ReportController extends Controller
             'promedioPresupuesto',
             'porMoneda',
             'proximosCerrar',
-            'presupuestoPorMoneda',
-            'totalPorMoneda',
             'meses',
+            'licitacionesPorEstado',
+            'presupuestoPorEstado',
         ));
     }
 
