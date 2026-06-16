@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Responsable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class ResponsableController extends Controller
@@ -38,6 +39,11 @@ class ResponsableController extends Controller
 
         Responsable::create($validated);
 
+        Log::info('Responsable creado', [
+            'nombre_completo' => $validated['nombre_completo'],
+            'user'            => auth()->user()->email,
+        ]);
+
         return redirect()->route('responsables.index')
             ->with('success', 'Responsable creado correctamente.');
     }
@@ -57,6 +63,12 @@ class ResponsableController extends Controller
 
         $responsable->update($validated);
 
+        Log::info('Responsable actualizado', [
+            'codigo'          => $responsable->codigo_responsable,
+            'nombre_completo' => $validated['nombre_completo'],
+            'user'            => auth()->user()->email,
+        ]);
+
         return redirect()->route('responsables.index')
             ->with('success', 'Responsable actualizado correctamente.');
     }
@@ -69,6 +81,12 @@ class ResponsableController extends Controller
         }
 
         $responsable->delete();
+
+        Log::info('Responsable eliminado', [
+            'codigo'          => $responsable->codigo_responsable,
+            'nombre_completo' => $responsable->nombre_completo,
+            'user'            => auth()->user()->email,
+        ]);
 
         return redirect()->route('responsables.index')
             ->with('success', 'Responsable eliminado correctamente.');

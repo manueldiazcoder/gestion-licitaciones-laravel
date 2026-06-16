@@ -13,7 +13,7 @@ class LicitacionController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('role:admin')->except(['index', 'show']);
+        $this->middleware('role:admin')->except(['index', 'show', 'exportCsv']);
     }
 
     public function index(Request $request)
@@ -96,6 +96,11 @@ class LicitacionController extends Controller
             ->byDateRange($request->query('desde'), $request->query('hasta'))
             ->orderBy('codigo_licitacion')
             ->get();
+
+        Log::info('Exportación CSV', [
+            'total_registros' => $licitaciones->count(),
+            'user'            => auth()->user()->email,
+        ]);
 
         $filename = 'licitaciones_' . now()->format('Y-m-d_His') . '.csv';
 

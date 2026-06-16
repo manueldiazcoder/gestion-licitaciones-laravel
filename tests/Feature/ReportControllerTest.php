@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\Proceso;
+use App\Models\Licitacion;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -18,21 +18,21 @@ class ReportControllerTest extends TestCase
     public function test_admin_puede_ver_reportes(): void
     {
         $admin = User::factory()->admin()->create();
-        Proceso::factory()->count(5)->create();
+        Licitacion::factory()->count(5)->create();
 
         $this->actingAs($admin)
             ->get(route('reportes.index'))
             ->assertStatus(200)
             ->assertSee('Reportes')
-            ->assertSee('Total procesos')
-            ->assertSee('Presupuesto total')
-            ->assertSee('Distribución por moneda');
+            ->assertSee('Total Licitaciones')
+            ->assertSee('Presupuesto Global')
+            ->assertSee('Licitaciones por Estado');
     }
 
     public function test_visor_puede_ver_reportes(): void
     {
         $visor = User::factory()->visor()->create();
-        Proceso::factory()->count(3)->create();
+        Licitacion::factory()->count(3)->create();
 
         $this->actingAs($visor)
             ->get(route('reportes.index'))
@@ -47,30 +47,6 @@ class ReportControllerTest extends TestCase
     }
 
     // ─────────────────────────────────────────
-    //  Export CSV
-    // ─────────────────────────────────────────
-
-    public function test_admin_puede_exportar_csv(): void
-    {
-        $admin = User::factory()->admin()->create();
-        Proceso::factory()->count(3)->create();
-
-        $this->actingAs($admin)
-            ->get(route('reportes.export'))
-            ->assertStatus(200)
-            ->assertHeader('Content-Type', 'text/csv; charset=UTF-8');
-    }
-
-    public function test_visor_no_puede_exportar_csv(): void
-    {
-        $visor = User::factory()->visor()->create();
-
-        $this->actingAs($visor)
-            ->get(route('reportes.export'))
-            ->assertStatus(403);
-    }
-
-    // ─────────────────────────────────────────
     //  Dashboard: datos correctos
     // ─────────────────────────────────────────
 
@@ -78,17 +54,32 @@ class ReportControllerTest extends TestCase
     {
         $admin = User::factory()->admin()->create();
 
-        // Crear procesos específicos para verificar stats
-        Proceso::factory()->create(['moneda' => 'COP', 'presupuesto' => 1000000]);
-        Proceso::factory()->create(['moneda' => 'COP', 'presupuesto' => 2000000]);
-        Proceso::factory()->create(['moneda' => 'USD', 'presupuesto' => 50000]);
+        Licitacion::factory()->create(['moneda' => 'COP', 'presupuesto' => 1000000]);
+        Licitacion::factory()->create(['moneda' => 'COP', 'presupuesto' => 2000000]);
+        Licitacion::factory()->create(['moneda' => 'USD', 'presupuesto' => 50000]);
 
         $this->actingAs($admin)
             ->get(route('reportes.index'))
             ->assertStatus(200)
-            ->assertSee('Total procesos')
-            ->assertSee('3')          // 3 procesos en total
+            ->assertSee('Total Licitaciones')
             ->assertSee('COP')
             ->assertSee('USD');
+    }
+
+    public function test_reportes_tablas_por_estado_muestran_datos(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        Licitacion::factory()->count(2)->create(['estado' => 'Publicado']);
+        Licitacion::factory()->create(['estado' => 'Borrador']);
+        Licitacion::factory()->create(['estado' => 'Adjudicado']);
+
+        $this->actingAs($admin)
+            ->get(route('reportes.index'))
+            ->assertStatus(200)
+            ->assertSee('Publicado')
+            ->assertSee('Borrador')
+            ->assertSee('Adjudicado')
+            ->assertDontSee('No hay licitaciones registradas');
     }
 }

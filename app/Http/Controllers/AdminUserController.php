@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class AdminUserController extends Controller
@@ -39,6 +40,13 @@ class AdminUserController extends Controller
 
         $user->update($validated);
 
+        Log::info('Usuario actualizado por admin', [
+            'user_id' => $user->id,
+            'name'    => $user->name,
+            'role'    => $validated['role'],
+            'admin'   => auth()->user()->email,
+        ]);
+
         return redirect()->route('usuarios.index')
             ->with('success', "Usuario {$user->name} actualizado correctamente.");
     }
@@ -56,6 +64,12 @@ class AdminUserController extends Controller
         }
 
         $user->delete();
+
+        Log::info('Usuario eliminado por admin', [
+            'user_id' => $user->id,
+            'name'    => $user->name,
+            'admin'   => auth()->user()->email,
+        ]);
 
         return redirect()->route('usuarios.index')
             ->with('success', 'Usuario eliminado correctamente.');

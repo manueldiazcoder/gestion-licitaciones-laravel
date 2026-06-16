@@ -3,10 +3,11 @@
 namespace Database\Factories;
 
 use App\Models\Licitacion;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Proceso>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Licitacion>
  */
 class LicitacionFactory extends Factory
 {
@@ -34,8 +35,20 @@ class LicitacionFactory extends Factory
             'hora_inicio'  => fake()->randomElement(['08:00', '09:00', '10:00', '14:00']),
             'fecha_cierre' => $fechaCierre->format('Y-m-d'),
             'hora_cierre'  => fake()->randomElement(['16:00', '17:00', '18:00']),
-            'presupuesto'   => $presupuesto,
+            'presupuesto'  => $presupuesto,
             'moneda'       => $moneda,
+            'estado'       => fake()->randomElement(Licitacion::ESTADOS),
+            'creador_id'   => User::factory(),
         ];
+    }
+
+    /**
+     * Asigna un creador (usuario) específico a la licitación.
+     */
+    public function creadoPor(User $user): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'creador_id' => $user->id,
+        ]);
     }
 }
