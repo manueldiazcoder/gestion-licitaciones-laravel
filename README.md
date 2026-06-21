@@ -138,6 +138,40 @@ El sistema resuelve esto con:
 
 ---
 
+## 📸 Capturas de Pantalla
+
+<details>
+<summary>Click para ver capturas del sistema funcionando</summary>
+
+---
+
+*Pantalla de inicio de sesión con OAuth (Google + GitHub)*
+![Login con OAuth](public/assets/screenshots/login.png)
+
+*Dashboard principal con acceso a las secciones del sistema*
+![Dashboard](public/assets/screenshots/dashboard.png)
+
+*Formulario unificado de creación de licitaciones*
+![Formulario de creación](public/assets/screenshots/crear.png)
+
+*Pantalla de consulta con tabla y filtros de búsqueda*
+![Consulta con búsqueda](public/assets/screenshots/consultar.png)
+
+*Reportes con métricas agregadas*
+![Reportes y estadísticas](public/assets/screenshots/reportes.png)
+
+*Gestión de responsables*
+![Responsables](public/assets/screenshots/responsables.png)
+
+*Gestión de usuarios (solo administradores)*
+![Usuarios](public/assets/screenshots/usuarios.png)
+
+---
+
+</details>
+
+---
+
 ## 🧠 Competencias Demostradas
 
 > Este proyecto está diseñado como **portafolio** para demostrar competencias
